@@ -1,22 +1,40 @@
 import django_filters
 from .models import *
+from .models import Responsaveis, Locais, Ambientes, Microcontroladores, Sensores, Historicos, Usuarios
 
-class UsuarioFilter(django_filters.FilterSet):
+class ResponsaveisFilter(django_filters.FilterSet):
     nome = django_filters.CharFilter(field_name='nome', lookup_expr='icontains')
-    tipo = django_filters.CharFilter(field_name='tipo', lookup_expr='iexact')
 
     class Meta:
-        model = Usuario
-        fields = ['nome', 'tipo']
+        model = Responsaveis
+        fields = ['nome']
 
-class ImovelFilter(django_filters.FilterSet):
+class LocaisFilter(django_filters.FilterSet):
+    local = django_filters.CharFilter(field_name='local', lookup_expr='icontains')
+
+    class Meta:
+        model = Locais
+        fields = ['local']
+
+#falta daqui pra baixo, depois passar para os views
+
+class AmbientesFilter(django_filters.FilterSet):
     titulo = django_filters.CharFilter(field_name='titulo', lookup_expr='icontains')
     tipo = django_filters.CharFilter(field_name='tipo', lookup_expr='iexact')
     status = django_filters.CharFilter(field_name='status', lookup_expr='iexact')
 
     class Meta:
-        model = Imovel
+        model = Ambientes
         fields = ['titulo', 'tipo', 'status']
+
+
+class UsuariosFilter(django_filters.FilterSet):
+    nome = django_filters.CharFilter(field_name='nome', lookup_expr='icontains')
+    tipo = django_filters.CharFilter(field_name='tipo', lookup_expr='iexact')
+
+    class Meta:
+        model = Usuarios
+        fields = ['nome', 'tipo']
 
 class ContratoFilter(django_filters.FilterSet):
     data_inicio = django_filters.DateFilter(field_name='data_inicio', lookup_expr='gte') #É como se fosse o mínimo
