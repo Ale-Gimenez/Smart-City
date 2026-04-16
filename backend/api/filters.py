@@ -1,56 +1,57 @@
 import django_filters
-from .models import *
 from .models import Responsaveis, Locais, Ambientes, Microcontroladores, Sensores, Historicos, Usuarios
 
 class ResponsaveisFilter(django_filters.FilterSet):
     nome = django_filters.CharFilter(field_name='nome', lookup_expr='icontains')
-
     class Meta:
         model = Responsaveis
         fields = ['nome']
 
 class LocaisFilter(django_filters.FilterSet):
     local = django_filters.CharFilter(field_name='local', lookup_expr='icontains')
-
     class Meta:
         model = Locais
         fields = ['local']
 
-#falta daqui pra baixo, depois passar para os views
-
 class AmbientesFilter(django_filters.FilterSet):
-    titulo = django_filters.CharFilter(field_name='titulo', lookup_expr='icontains')
-    tipo = django_filters.CharFilter(field_name='tipo', lookup_expr='iexact')
-    status = django_filters.CharFilter(field_name='status', lookup_expr='iexact')
-
+    descricao = django_filters.CharFilter(field_name='descricao', lookup_expr='icontains')
+    local = django_filters.NumberFilter(field_name='local_id')
+    responsavel = django_filters.NumberFilter(field_name='responsavel_id')
     class Meta:
         model = Ambientes
-        fields = ['titulo', 'tipo', 'status']
+        fields = ['descricao', 'local', 'responsavel']
 
+class MicrocontroladoresFilter(django_filters.FilterSet):
+    modelo = django_filters.CharFilter(field_name='modelo', lookup_expr='icontains')
+    mac_address = django_filters.CharFilter(field_name='mac_address', lookup_expr='icontains')
+    status = django_filters.BooleanFilter(field_name='status')
+    ambiente = django_filters.NumberFilter(field_name='ambiente_id')
+    class Meta:
+        model = Microcontroladores
+        fields = ['modelo', 'mac_address', 'status', 'ambiente']
+
+class SensoresFilter(django_filters.FilterSet):
+    sensor = django_filters.ChoiceFilter(field_name='sensor', choices=Sensores.SENSOR_CHOICES)
+    unidade_med = django_filters.ChoiceFilter(field_name='unidade_med', choices=Sensores.UNIDADE_CHOICES)
+    status = django_filters.BooleanFilter(field_name='status')
+    mic = django_filters.NumberFilter(field_name='mic_id')
+    class Meta:
+        model = Sensores
+        fields = ['sensor', 'unidade_med', 'status', 'mic']
+
+class HistoricosFilter(django_filters.FilterSet):
+    timestamp_min = django_filters.DateTimeFilter(field_name='timestamp', lookup_expr='gte')
+    timestamp_max = django_filters.DateTimeFilter(field_name='timestamp', lookup_expr='lte')
+    valor_min = django_filters.NumberFilter(field_name='valor', lookup_expr='gte')
+    valor_max = django_filters.NumberFilter(field_name='valor', lookup_expr='lte')
+    sensor = django_filters.NumberFilter(field_name='sensor_id')
+    class Meta:
+        model = Historicos
+        fields = ['sensor', 'timestamp', 'valor']
 
 class UsuariosFilter(django_filters.FilterSet):
     nome = django_filters.CharFilter(field_name='nome', lookup_expr='icontains')
-    tipo = django_filters.CharFilter(field_name='tipo', lookup_expr='iexact')
-
+    tipo = django_filters.ChoiceFilter(field_name='tipo', choices=Usuarios.TIPO_CHOICES)
     class Meta:
         model = Usuarios
         fields = ['nome', 'tipo']
-
-class ContratoFilter(django_filters.FilterSet):
-    data_inicio = django_filters.DateFilter(field_name='data_inicio', lookup_expr='gte') #É como se fosse o mínimo
-    data_fim = django_filters.DateFilter(field_name='data_fim', lookup_expr='lte') #É como se fosse o máximo
-    valor_min = django_filters.NumberFilter(field_name='valor', lookup_expr='gte')
-    valor_max = django_filters.NumberFilter(field_name='valor', lookup_expr='lte')
-
-    class Meta:
-        model = Contrato
-        fields = ['data_inicio', 'data_fim', 'valor']
-
-class PagamentoFilter(django_filters.FilterSet):
-    data_pagamento = django_filters.DateFilter(field_name='data_pagamento')
-    status = django_filters.BooleanFilter(field_name='status')
-    contrato = django_filters.NumberFilter(field_name='contrato_id')
-
-    class Meta:
-        model = Pagamento
-        fields = ['data_pagamento', 'status', 'contrato_id']
