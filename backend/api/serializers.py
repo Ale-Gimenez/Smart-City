@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import Responsaveis, Locais, Ambientes, Microcontroladores, Sensores, Historicos, Usuarios
 from django.contrib.auth.models import User
 
-class ResponsavesSerializer(serializers.ModelSerializer):
+class ResponsaveisSerializer(serializers.ModelSerializer):
     class Meta:
         model = Responsaveis
         fields = '__all__'

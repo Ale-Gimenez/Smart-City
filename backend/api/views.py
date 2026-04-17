@@ -5,6 +5,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework import status
 from .models import Responsaveis, Locais, Ambientes, Microcontroladores, Sensores, Historicos, Usuarios
 from .serializers import *
+from .permissions import IsAdminOrReadOnly
 from rest_framework.decorators import api_view, action, permission_classes
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView
 from rest_framework.views import APIView
