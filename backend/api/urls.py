@@ -27,4 +27,12 @@ urlpatterns = [
 
     # MODELVIEWSET
     path('', include(router.urls)),
+
+    # EXCELL
+    path('importar/locais/', importar_locais),
+    path('importar/responsaveis/', importar_responsaveis),
+    path('importar/ambientes/', importar_ambientes),
+    path('importar/microcontroladores/', importar_microcontroladores),
+    path('importar/sensores/', importar_sensores),
+    path('importar/historicos/', importar_historicos),
 ]

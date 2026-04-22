@@ -11,7 +11,7 @@ export default function Login() {
   async function handleLogin(e) {
     e.preventDefault();
     try {
-      const res = await api.post('token/', { username, password });
+      const res = await api.post('api/token/', { username, password });
       localStorage.setItem('token', res.data.access);
       navigate('/home');
     } catch {

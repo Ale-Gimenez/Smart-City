@@ -1,10 +1,9 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8000/',
+  baseURL: 'http://127.0.0.1:8000/',
 });
 
-// Injeta o token em toda requisição automaticamente
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
@@ -13,7 +12,6 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Redireciona para login se receber 401
 api.interceptors.response.use(
   (response) => response,
   (error) => {
