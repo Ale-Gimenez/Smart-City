@@ -15,7 +15,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .filters import *
 from django.utils import timezone
 from datetime import timedelta
-from rest_framework.decorators import api_view, action, permission_classes
 import pandas as pd
 
 
@@ -90,7 +89,6 @@ class UsuariosViewSet(ModelViewSet):
         qs = super().get_queryset()
         if self.request.user.is_staff:
             return qs
-        # Usuário comum só vê o próprio perfil
         return qs.filter(user=self.request.user)
 
 
@@ -116,7 +114,8 @@ class UsuarioMeView(RetrieveAPIView):
 
     def get_object(self):
         return self.request.user.perfil
-    
+
+
 # ─── Importações de Planilhas ───────────────────────────────────────────────
 
 @api_view(['POST'])
@@ -128,11 +127,8 @@ def importar_locais(request):
 
     try:
         df = pd.read_excel(arquivo)
-
-        colunas_esperadas = ['local']
-        for coluna in colunas_esperadas:
-            if coluna not in df.columns:
-                return Response({"detail": f"Coluna obrigatória ausente: {coluna}"}, status=status.HTTP_400_BAD_REQUEST)
+        if 'local' not in df.columns:
+            return Response({"detail": "Coluna obrigatória ausente: local"}, status=status.HTTP_400_BAD_REQUEST)
 
         criados, ignorados = 0, 0
         for _, row in df.iterrows():
@@ -142,11 +138,7 @@ def importar_locais(request):
             else:
                 ignorados += 1
 
-        return Response({
-            "detail": "Importação concluída.",
-            "criados": criados,
-            "ignorados (já existiam)": ignorados
-        })
+        return Response({"detail": "Importação concluída.", "criados": criados, "ignorados (já existiam)": ignorados})
     except Exception as e:
         return Response({"detail": f"Erro ao importar arquivo: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -160,25 +152,19 @@ def importar_responsaveis(request):
 
     try:
         df = pd.read_excel(arquivo)
-
-        colunas_esperadas = ['responsavel']
-        for coluna in colunas_esperadas:
-            if coluna not in df.columns:
-                return Response({"detail": f"Coluna obrigatória ausente: {coluna}"}, status=status.HTTP_400_BAD_REQUEST)
+        if 'responsavel' not in df.columns:
+            return Response({"detail": "Coluna obrigatória ausente: responsavel"}, status=status.HTTP_400_BAD_REQUEST)
 
         criados, ignorados = 0, 0
         for _, row in df.iterrows():
+            # CORREÇÃO: campo do model é 'nome', planilha usa 'responsavel'
             _, created = Responsaveis.objects.get_or_create(nome=row['responsavel'])
             if created:
                 criados += 1
             else:
                 ignorados += 1
 
-        return Response({
-            "detail": "Importação concluída.",
-            "criados": criados,
-            "ignorados (já existiam)": ignorados
-        })
+        return Response({"detail": "Importação concluída.", "criados": criados, "ignorados (já existiam)": ignorados})
     except Exception as e:
         return Response({"detail": f"Erro ao importar arquivo: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -192,9 +178,7 @@ def importar_ambientes(request):
 
     try:
         df = pd.read_excel(arquivo)
-
-        colunas_esperadas = ['local', 'descricao', 'responsavel']
-        for coluna in colunas_esperadas:
+        for coluna in ['local', 'descricao', 'responsavel']:
             if coluna not in df.columns:
                 return Response({"detail": f"Coluna obrigatória ausente: {coluna}"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -203,24 +187,21 @@ def importar_ambientes(request):
 
         for i, row in df.iterrows():
             try:
-                print(f"Linha {i+2}: local={row['local']}, tipo={type(row['local'])}")
                 local_obj = Locais.objects.get(local=row['local'])
             except Locais.DoesNotExist:
                 erros.append(f"Linha {i+2}: Local '{row['local']}' não encontrado.")
                 continue
 
             try:
-                responsavel_obj = Responsaveis.objects.get(responsavel=row['responsavel'])
+                # CORREÇÃO: campo do model é 'nome', planilha usa 'responsavel'
+                responsavel_obj = Responsaveis.objects.get(nome=row['responsavel'])
             except Responsaveis.DoesNotExist:
                 erros.append(f"Linha {i+2}: Responsável '{row['responsavel']}' não encontrado.")
                 continue
 
             _, created = Ambientes.objects.get_or_create(
                 descricao=row['descricao'],
-                defaults={
-                    'local': local_obj,
-                    'responsavel': responsavel_obj,
-                }
+                defaults={'local': local_obj, 'responsavel': responsavel_obj}
             )
             if created:
                 criados += 1
@@ -244,9 +225,7 @@ def importar_microcontroladores(request):
 
     try:
         df = pd.read_excel(arquivo)
-
-        colunas_esperadas = ['modelo', 'mac_address', 'latitude', 'longitude', 'status', 'ambiente']
-        for coluna in colunas_esperadas:
+        for coluna in ['modelo', 'mac_address', 'latitude', 'longitude', 'status', 'ambiente']:
             if coluna not in df.columns:
                 return Response({"detail": f"Coluna obrigatória ausente: {coluna}"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -254,7 +233,6 @@ def importar_microcontroladores(request):
         criados, ignorados = 0, 0
 
         for i, row in df.iterrows():
-            # Busca o Ambiente pelo nome/descrição
             try:
                 ambiente_obj = Ambientes.objects.get(descricao=row['ambiente'])
             except Ambientes.DoesNotExist:
@@ -267,7 +245,7 @@ def importar_microcontroladores(request):
                     'modelo': row['modelo'],
                     'latitude': row['latitude'],
                     'longitude': row['longitude'],
-                    'status': row['status'],
+                    'status': bool(row['status']),
                     'ambiente': ambiente_obj,
                 }
             )
@@ -293,9 +271,7 @@ def importar_sensores(request):
 
     try:
         df = pd.read_excel(arquivo)
-
-        colunas_esperadas = ['sensor', 'unidade_med', 'mic', 'status']
-        for coluna in colunas_esperadas:
+        for coluna in ['sensor', 'unidade_med', 'mic', 'status']:
             if coluna not in df.columns:
                 return Response({"detail": f"Coluna obrigatória ausente: {coluna}"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -303,19 +279,20 @@ def importar_sensores(request):
         criados, ignorados = 0, 0
 
         for i, row in df.iterrows():
-            # Busca o Microcontrolador pelo mac_address
             try:
                 mic_obj = Microcontroladores.objects.get(mac_address=row['mic'])
             except Microcontroladores.DoesNotExist:
                 erros.append(f"Linha {i+2}: Microcontrolador '{row['mic']}' não encontrado.")
                 continue
 
+            # CORREÇÃO: get_or_create por (sensor, mic) para evitar duplicatas
+            # mas permitir sensores do mesmo tipo em microcontroladores diferentes
             _, created = Sensores.objects.get_or_create(
                 sensor=row['sensor'],
+                mic=mic_obj,
                 defaults={
                     'unidade_med': row['unidade_med'],
-                    'mic': mic_obj,
-                    'status': row['status'],
+                    'status': bool(row['status']),
                 }
             )
             if created:
@@ -340,9 +317,7 @@ def importar_historicos(request):
 
     try:
         df = pd.read_excel(arquivo)
-
-        colunas_esperadas = ['sensor', 'valor', 'timestamp']
-        for coluna in colunas_esperadas:
+        for coluna in ['sensor', 'valor', 'timestamp']:
             if coluna not in df.columns:
                 return Response({"detail": f"Coluna obrigatória ausente: {coluna}"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -350,16 +325,20 @@ def importar_historicos(request):
         criados = 0
 
         for i, row in df.iterrows():
-            # Busca o Sensor pelo nome
+            # CORREÇÃO: a planilha contém o ID numérico do sensor
             try:
-                sensor_obj = Sensores.objects.get(sensor=row['sensor'])
+                sensor_id = int(row['sensor'])
+                sensor_obj = Sensores.objects.get(id=sensor_id)
+            except (ValueError, TypeError):
+                erros.append(f"Linha {i+2}: ID de sensor inválido '{row['sensor']}'.")
+                continue
             except Sensores.DoesNotExist:
-                erros.append(f"Linha {i+2}: Sensor '{row['sensor']}' não encontrado.")
+                erros.append(f"Linha {i+2}: Sensor com ID '{row['sensor']}' não encontrado.")
                 continue
 
-            # Valida se o sensor está ativo (mesma regra do perform_create)
+            # Regra de negócio: sensor inativo não recebe medições
             if not sensor_obj.status:
-                erros.append(f"Linha {i+2}: Sensor '{row['sensor']}' está inativo.")
+                erros.append(f"Linha {i+2}: Sensor ID {sensor_obj.id} ({sensor_obj.sensor}) está inativo.")
                 continue
 
             Historicos.objects.create(

@@ -2,65 +2,73 @@ from rest_framework import serializers
 from .models import Responsaveis, Locais, Ambientes, Microcontroladores, Sensores, Historicos, Usuarios
 from django.contrib.auth.models import User
 
+
 class ResponsaveisSerializer(serializers.ModelSerializer):
     class Meta:
         model = Responsaveis
         fields = '__all__'
+
 
 class LocaisSerializer(serializers.ModelSerializer):
     class Meta:
         model = Locais
         fields = '__all__'
 
+
 class AmbientesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ambientes
         fields = '__all__'
+
 
 class MicrocontroladoresSerializer(serializers.ModelSerializer):
     class Meta:
         model = Microcontroladores
         fields = '__all__'
 
+
 class SensoresSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sensores
         fields = '__all__'
+
 
 class HistoricosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Historicos
         fields = '__all__'
 
+
 class UsuariosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuarios
         fields = '__all__'
 
+
 class RegisterSerializer(serializers.Serializer):
     # Tabela auth_user
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
-    # Tabela api_usuario
-    nome = serializers.CharField(required=False, allow_blank=True, default='')# não colocar espaço no meio das aspas, vai dar erro
+    # Tabela api_usuarios
+    nome = serializers.CharField(required=False, allow_blank=True, default='')
     telefone = serializers.CharField(required=False, allow_blank=True, default='')
     tipo = serializers.ChoiceField(choices=Usuarios.TIPO_CHOICES)
 
     def create(self, validated_data):
-        # Criando na tabela api_usuario
         nome = validated_data.get('nome', '')
         telefone = validated_data.get('telefone', '')
         tipo = validated_data['tipo']
 
-        # Criando na tabela auth_user
         user = User.objects.create_user(
             username=validated_data['username'],
             password=validated_data['password']
         )
 
+        # CORREÇÃO: salvar o user após alterar is_staff
         if tipo == "ADMINISTRADOR":
             user.is_staff = True
             user.is_active = True
+            user.save()
         else:
             user.is_staff = False
             user.is_active = True
@@ -68,17 +76,17 @@ class RegisterSerializer(serializers.Serializer):
             user.save()
 
         Usuarios.objects.create(
-            user = user,
-            nome = nome if nome else user.username,
-            telefone = telefone,
-            tipo = tipo
+            user=user,
+            nome=nome if nome else user.username,
+            telefone=telefone,
+            tipo=tipo
         )
 
         return user
-    
+
+
 class UsuarioMeSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
-
     is_superuser = serializers.BooleanField(source='user.is_superuser', read_only=True)
     is_staff = serializers.BooleanField(source='user.is_staff', read_only=True)
     is_active = serializers.BooleanField(source='user.is_active', read_only=True)
@@ -86,4 +94,3 @@ class UsuarioMeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuarios
         fields = ['id', 'nome', 'telefone', 'tipo', 'username', 'is_superuser', 'is_staff', 'is_active']
-

@@ -1,43 +1,49 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import Layout from '../../components/Layout';
+import Table, { td } from '../../components/Table';
 import api from '../../api/axios';
 
-export default function Temperatura() {
-  const [dados, setDados] = useState([]);
-  const [erro, setErro] = useState('');
-  const navigate = useNavigate();
+export default function Umidade() {
+  const [dados, setDados]   = useState([]);
+  const [erro, setErro]     = useState('');
+  const [sensores, setSens] = useState([]);
 
   useEffect(() => {
-    api.get('historicos/?sensor__mic__sensor=TEMPERATURA')
-      .then((res) => setDados(res.data))
+    api.get('api/sensores/?sensor=UMIDADE').then(r => setSens(r.data)).catch(() => {});
+    api.get('api/historicos/?sensor__sensor=UMIDADE')
+      .then(r => setDados(r.data))
       .catch(() => setErro('Erro ao carregar dados.'));
   }, []);
 
+  function nomeSensor(id) {
+    const s = sensores.find(s => s.id === id);
+    return s ? `#${s.id}` : id;
+  }
+
   return (
-    <div style={{ padding: '2rem' }}>
-      <button onClick={() => navigate('/home')}>← Voltar</button>
-      <h2>🌡️ Temperatura</h2>
-      {erro && <p style={{ color: 'red' }}>{erro}</p>}
-      <table border="1" cellPadding="8" style={{ borderCollapse: 'collapse', width: '100%' }}>
-        <thead style={{ background: '#f0f2f5' }}>
-          <tr>
-            <th>ID</th>
-            <th>Sensor</th>
-            <th>Valor (°C)</th>
-            <th>Timestamp</th>
-          </tr>
-        </thead>
-        <tbody>
-          {dados.map((d) => (
-            <tr key={d.id}>
-              <td>{d.id}</td>
-              <td>{d.sensor}</td>
-              <td>{d.valor}</td>
-              <td>{new Date(d.timestamp).toLocaleString('pt-BR')}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Layout>
+      <div style={{ padding: '2rem' }}>
+        <h1 style={{ fontFamily: 'var(--font-head)', fontSize: 22, fontWeight: 800, marginBottom: '0.4rem' }}>
+          💧 Umidade
+        </h1>
+        <p style={{ color: 'var(--muted)', fontSize: 13, marginBottom: '1.5rem' }}>
+          Histórico de leituras — unidade: %
+        </p>
+        {erro && <p style={{ color: 'var(--danger)', marginBottom: 12 }}>{erro}</p>}
+        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)' }}>
+          <Table
+            columns={['ID', 'Sensor', 'Valor (%)', 'Timestamp']}
+            rows={dados}
+            emptyMsg="Nenhuma medição encontrada."
+            renderRow={r => (<>
+              <td style={td}>{r.id}</td>
+              <td style={td}>{nomeSensor(r.sensor)}</td>
+              <td style={td}>{r.valor}</td>
+              <td style={td}>{new Date(r.timestamp).toLocaleString('pt-BR')}</td>
+            </>)}
+          />
+        </div>
+      </div>
+    </Layout>
   );
 }
