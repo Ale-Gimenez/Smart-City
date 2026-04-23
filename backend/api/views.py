@@ -55,7 +55,7 @@ class SensoresViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_class = SensoresFilter
     permission_classes = [IsAdminOrReadOnly]
-
+#teste
 
 class HistoricosViewSet(ModelViewSet):
     queryset = Historicos.objects.all()

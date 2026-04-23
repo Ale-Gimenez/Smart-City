@@ -1,0 +1,1074 @@
+type: spec.insomnia.rest/5.0
+schema_version: "5.1"
+name: SmartCity
+meta:
+  id: wrk_309623bc8adc4e6da981085350680556
+  created: 1776854881634
+  modified: 1776854881634
+  description: ""
+collection:
+  - name: Token
+    meta:
+      id: fld_3234956ecac64c76b55c8ed20ff77f2d
+      created: 1776855368476
+      modified: 1776863638299
+      sortKey: -1776855368476
+      description: ""
+    children:
+      - url: http://127.0.0.1:8000/api/token/
+        name: Token
+        meta:
+          id: req_254e9ae9042248bb859d67ddda503016
+          created: 1776854910534
+          modified: 1776944456996
+          isPrivate: false
+          description: ""
+          sortKey: -1776898181444.5
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"username": "senai",
+            	"password": "123"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/refresh/
+        name: Refresh
+        meta:
+          id: req_24442c8008a14799b95cb9d40c03d2b9
+          created: 1776855313775
+          modified: 1776941384226
+          isPrivate: false
+          description: ""
+          sortKey: -1776855379596
+        method: POST
+        body:
+          mimeType: application/json
+          text: >-
+            {
+            	"refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3Njk0MTcwMCwiaWF0IjoxNzc2ODU1MzAwLCJqdGkiOiI0ODRjNmFiZDM4Yzg0YzI5YjAxZmRjZDQ5MDZkNzI4ZCIsInVzZXJfaWQiOiIxIn0.7RQIdKNhtEG83smVoruOuB_QLC1Gd48hkgEll72cX2U"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: none
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/register/
+        name: Register
+        meta:
+          id: req_22a0041e3cd742a3a4f636d115879bfb
+          created: 1776940983193
+          modified: 1776941136077
+          isPrivate: false
+          description: ""
+          sortKey: -1776940983193
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "username": "senai",
+              "password": "123",
+              "nome": "Administrador SENAI",
+              "tipo": "ADMINISTRADOR"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/me/
+        name: Me
+        meta:
+          id: req_9f442a034cec471b8a9c55ea142e3b7d
+          created: 1776941397187
+          modified: 1776944831499
+          isPrivate: false
+          description: ""
+          sortKey: -1776941397187
+        method: GET
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"username": "senai",
+            	"password": "123"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Responsaveis
+    meta:
+      id: fld_c10114ac43c64b3a9767d7c971f4af6c
+      created: 1776863117026
+      modified: 1776863117026
+      sortKey: -1776863117026
+      description: ""
+    children:
+      - url: http://127.0.0.1:8000/api/importar/responsaveis/
+        name: Importar Responsaveis
+        meta:
+          id: req_fac7f148602642b7a467f5167c0cfa96
+          created: 1776861389864
+          modified: 1776941204738
+          isPrivate: false
+          description: ""
+          sortKey: -1776863120729
+        method: POST
+        body:
+          mimeType: multipart/form-data
+          params:
+            - name: file
+              value: ""
+              description: ""
+              disabled: false
+              fileName: C:\Users\24420168854\Documents\Smart-City\population\responsaveis.xlsx
+              type: file
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQ4Mzc1LCJpYXQiOjE3NzY5NDExNzUsImp0aSI6IjYwNjk1MGVhNWUxZjQwODVhZDA4YjdiMDNlMjcwZjg0IiwidXNlcl9pZCI6IjIifQ.47-3-uzrBFSHxkRMxtsoLrO9gr-8ig2TQech5-ma-IU
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/responsaveis/
+        name: Listar
+        meta:
+          id: req_67a9f4537c8040d784542c965642ca5e
+          created: 1776863120629
+          modified: 1776944807231
+          isPrivate: false
+          description: ""
+          sortKey: -1776863120629
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQ4Mzc1LCJpYXQiOjE3NzY5NDExNzUsImp0aSI6IjYwNjk1MGVhNWUxZjQwODVhZDA4YjdiMDNlMjcwZjg0IiwidXNlcl9pZCI6IjIifQ.47-3-uzrBFSHxkRMxtsoLrO9gr-8ig2TQech5-ma-IU
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/responsaveis/
+        name: Criar
+        meta:
+          id: req_0bd4ef607d1c46c489d4c2b409e58dc6
+          created: 1776867201389
+          modified: 1776944783210
+          isPrivate: false
+          description: ""
+          sortKey: -1776867201389
+        method: POST
+        body:
+          mimeType: application/json
+          text: ""
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/responsaveis/1/
+        name: Delete
+        meta:
+          id: req_b4e6fafb2e564bef937bd39cc57136ff
+          created: 1776867237834
+          modified: 1776944773881
+          isPrivate: false
+          description: ""
+          sortKey: -1776867237834
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/responsaveis/1/
+        name: Atualizar
+        meta:
+          id: req_b6a5126ffb0f4dafb77487054e95e7b2
+          created: 1776867250500
+          modified: 1776944765756
+          isPrivate: false
+          description: ""
+          sortKey: -1776867250500
+        method: PUT
+        body:
+          mimeType: application/json
+          text: ""
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Ambientes
+    meta:
+      id: fld_23ad13b55b764e558526179187144b34
+      created: 1776863735044
+      modified: 1776863735044
+      sortKey: -1776863735044
+      description: ""
+    children:
+      - url: http://127.0.0.1:8000/api/importar/ambientes/
+        name: Importar Ambientes
+        meta:
+          id: req_e6f6002eafa247b2902b6243ee5283a5
+          created: 1776861408054
+          modified: 1776941226007
+          isPrivate: false
+          description: ""
+          sortKey: -1776863738129
+        method: POST
+        body:
+          mimeType: multipart/form-data
+          params:
+            - name: file
+              value: ""
+              description: ""
+              disabled: false
+              fileName: C:\Users\24420168854\Documents\Smart-City\population\ambientes.xlsx
+              type: file
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQ4Mzc1LCJpYXQiOjE3NzY5NDExNzUsImp0aSI6IjYwNjk1MGVhNWUxZjQwODVhZDA4YjdiMDNlMjcwZjg0IiwidXNlcl9pZCI6IjIifQ.47-3-uzrBFSHxkRMxtsoLrO9gr-8ig2TQech5-ma-IU
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/ambientes/
+        name: Listar
+        meta:
+          id: req_bc6ca411954643939c6219b944fa1867
+          created: 1776863738029
+          modified: 1776944719910
+          isPrivate: false
+          description: ""
+          sortKey: -1776863738029
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQ4Mzc1LCJpYXQiOjE3NzY5NDExNzUsImp0aSI6IjYwNjk1MGVhNWUxZjQwODVhZDA4YjdiMDNlMjcwZjg0IiwidXNlcl9pZCI6IjIifQ.47-3-uzrBFSHxkRMxtsoLrO9gr-8ig2TQech5-ma-IU
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/ambientes/
+        name: Criar
+        meta:
+          id: req_58bb0d8c7d29440692bb73909571e068
+          created: 1776941943006
+          modified: 1776944690947
+          isPrivate: false
+          description: ""
+          sortKey: -1776941943006
+        method: POST
+        body:
+          mimeType: application/json
+          text: ""
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQ4Mzc1LCJpYXQiOjE3NzY5NDExNzUsImp0aSI6IjYwNjk1MGVhNWUxZjQwODVhZDA4YjdiMDNlMjcwZjg0IiwidXNlcl9pZCI6IjIifQ.47-3-uzrBFSHxkRMxtsoLrO9gr-8ig2TQech5-ma-IU
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/ambientes/1/
+        name: Editar
+        meta:
+          id: req_af59229c15d4491889c255afed002589
+          created: 1776941977807
+          modified: 1776944648924
+          isPrivate: false
+          description: ""
+          sortKey: -1776941977807
+        method: PUT
+        body:
+          mimeType: application/json
+          text: ""
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQ4Mzc1LCJpYXQiOjE3NzY5NDExNzUsImp0aSI6IjYwNjk1MGVhNWUxZjQwODVhZDA4YjdiMDNlMjcwZjg0IiwidXNlcl9pZCI6IjIifQ.47-3-uzrBFSHxkRMxtsoLrO9gr-8ig2TQech5-ma-IU
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/ambientes/1/
+        name: Excluir
+        meta:
+          id: req_06503fb54e174555b6e7f347c9ba9a7a
+          created: 1776942029182
+          modified: 1776944680280
+          isPrivate: false
+          description: ""
+          sortKey: -1776942029182
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQ4Mzc1LCJpYXQiOjE3NzY5NDExNzUsImp0aSI6IjYwNjk1MGVhNWUxZjQwODVhZDA4YjdiMDNlMjcwZjg0IiwidXNlcl9pZCI6IjIifQ.47-3-uzrBFSHxkRMxtsoLrO9gr-8ig2TQech5-ma-IU
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Microcontroladores
+    meta:
+      id: fld_dbc0b649904642078db622a517da64d7
+      created: 1776863763846
+      modified: 1776863763846
+      sortKey: -1776863763846
+      description: ""
+    children:
+      - url: http://127.0.0.1:8000/api/importar/microcontroladores/
+        name: Importar Micro
+        meta:
+          id: req_f4e8cb11c9e948e39c384c14b36780b6
+          created: 1776861423837
+          modified: 1776941263702
+          isPrivate: false
+          description: ""
+          sortKey: -1776863772285
+        method: POST
+        body:
+          mimeType: multipart/form-data
+          params:
+            - name: file
+              value: ""
+              description: ""
+              disabled: false
+              fileName: C:\Users\24420168854\Documents\Smart-City\population\microcontroladores.xlsx
+              type: file
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQ4Mzc1LCJpYXQiOjE3NzY5NDExNzUsImp0aSI6IjYwNjk1MGVhNWUxZjQwODVhZDA4YjdiMDNlMjcwZjg0IiwidXNlcl9pZCI6IjIifQ.47-3-uzrBFSHxkRMxtsoLrO9gr-8ig2TQech5-ma-IU
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/microcontroladores/
+        name: Listar
+        meta:
+          id: req_398442a363e646eab1ceb665702da4bc
+          created: 1776863772185
+          modified: 1776944591178
+          isPrivate: false
+          description: ""
+          sortKey: -1776863772185
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQ4Mzc1LCJpYXQiOjE3NzY5NDExNzUsImp0aSI6IjYwNjk1MGVhNWUxZjQwODVhZDA4YjdiMDNlMjcwZjg0IiwidXNlcl9pZCI6IjIifQ.47-3-uzrBFSHxkRMxtsoLrO9gr-8ig2TQech5-ma-IU
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Historicos
+    meta:
+      id: fld_e68626718d1c42c89dbb0a7dee2779e6
+      created: 1776863788709
+      modified: 1776863788709
+      sortKey: -1776863788709
+      description: ""
+    children:
+      - url: http://127.0.0.1:8000/api/importar/historicos/
+        name: Importar Historicos
+        meta:
+          id: req_bc71e360fb06494e8e4125f1661ae6fc
+          created: 1776861448984
+          modified: 1776942306177
+          isPrivate: false
+          description: ""
+          sortKey: -1776863799995
+        method: POST
+        body:
+          mimeType: multipart/form-data
+          params:
+            - name: file
+              value: ""
+              description: ""
+              disabled: false
+              fileName: C:\Users\24420168854\Documents\Smart-City\population\historicos.xlsx
+              type: file
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQ4Mzc1LCJpYXQiOjE3NzY5NDExNzUsImp0aSI6IjYwNjk1MGVhNWUxZjQwODVhZDA4YjdiMDNlMjcwZjg0IiwidXNlcl9pZCI6IjIifQ.47-3-uzrBFSHxkRMxtsoLrO9gr-8ig2TQech5-ma-IU
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/historicos/
+        name: Listar
+        meta:
+          id: req_05f028c95ec94195bdd23c4a4723a2e0
+          created: 1776863799895
+          modified: 1776944578471
+          isPrivate: false
+          description: ""
+          sortKey: -1776863799895
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQ4Mzc1LCJpYXQiOjE3NzY5NDExNzUsImp0aSI6IjYwNjk1MGVhNWUxZjQwODVhZDA4YjdiMDNlMjcwZjg0IiwidXNlcl9pZCI6IjIifQ.47-3-uzrBFSHxkRMxtsoLrO9gr-8ig2TQech5-ma-IU
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Locais
+    meta:
+      id: fld_720f08edd62349859d8b131558ec9661
+      created: 1776863829095
+      modified: 1776863829095
+      sortKey: -1776863829095
+      description: ""
+    children:
+      - url: http://127.0.0.1:8000/api/importar/locais/
+        name: Importar Locais
+        meta:
+          id: req_8f8ea1e1a4384eb08cf536db3955ec52
+          created: 1776861357422
+          modified: 1776941186225
+          isPrivate: false
+          description: ""
+          sortKey: -1776863831960
+        method: POST
+        body:
+          mimeType: multipart/form-data
+          params:
+            - name: file
+              value: ""
+              description: ""
+              disabled: false
+              fileName: C:\Users\24420168854\Documents\Smart-City\population\locais.xlsx
+              type: file
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQ4Mzc1LCJpYXQiOjE3NzY5NDExNzUsImp0aSI6IjYwNjk1MGVhNWUxZjQwODVhZDA4YjdiMDNlMjcwZjg0IiwidXNlcl9pZCI6IjIifQ.47-3-uzrBFSHxkRMxtsoLrO9gr-8ig2TQech5-ma-IU
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/locais/
+        name: Listar
+        meta:
+          id: req_300d9297ab994b99ab0f60c6f1165f06
+          created: 1776863831860
+          modified: 1776944563694
+          isPrivate: false
+          description: ""
+          sortKey: -1776863831860
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2ODY1NDczLCJpYXQiOjE3NzY4NjM2NzMsImp0aSI6ImQ4YmJhMzUxMjVmZTQ2OTViNTI0ZmVhZWI2MGRlMDRhIiwidXNlcl9pZCI6IjEifQ.qzUjm3PCFUFfV_y7aGcWnTQlsEM6d7xLziTOfDs9V2s
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/locais/
+        name: Criar
+        meta:
+          id: req_7ed93b19024345f2aa276ed104c300d8
+          created: 1776867107099
+          modified: 1776944741232
+          isPrivate: false
+          description: ""
+          sortKey: -1776863832060
+        method: POST
+        body:
+          mimeType: application/json
+          text: ""
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/locais/1/
+        name: Delete
+        meta:
+          id: req_1b7081919f194f13985acabd4a7c1863
+          created: 1776867131095
+          modified: 1776944534332
+          isPrivate: false
+          description: ""
+          sortKey: -1776867131095
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/locais/1/
+        name: Atualizar
+        meta:
+          id: req_1fb99cc95aa14632b22788bcb3f9a631
+          created: 1776867143767
+          modified: 1776944659589
+          isPrivate: false
+          description: ""
+          sortKey: -1776867143767
+        method: PUT
+        body:
+          mimeType: application/json
+          text: ""
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Sensores
+    meta:
+      id: fld_ee8f3eaed5bd47d0bde75d625f4106ed
+      created: 1776863854373
+      modified: 1776863854373
+      sortKey: -1776863854373
+      description: ""
+    children:
+      - url: http://127.0.0.1:8000/api/importar/sensores/
+        name: Importar Sensores
+        meta:
+          id: req_2ea078e77b574ebaa58d53e86e37f18c
+          created: 1776861436801
+          modified: 1776941301619
+          isPrivate: false
+          description: ""
+          sortKey: -1776863857476
+        method: POST
+        body:
+          mimeType: multipart/form-data
+          params:
+            - name: file
+              value: ""
+              description: ""
+              disabled: false
+              fileName: C:\Users\24420168854\Documents\Smart-City\population\sensores.xlsx
+              type: file
+        headers:
+          - name: Content-Type
+            value: multipart/form-data
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQ4Mzc1LCJpYXQiOjE3NzY5NDExNzUsImp0aSI6IjYwNjk1MGVhNWUxZjQwODVhZDA4YjdiMDNlMjcwZjg0IiwidXNlcl9pZCI6IjIifQ.47-3-uzrBFSHxkRMxtsoLrO9gr-8ig2TQech5-ma-IU
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/sensores/
+        name: Listar
+        meta:
+          id: req_3b93f373d0af4d11920140e05dd33b84
+          created: 1776863857376
+          modified: 1776944341338
+          isPrivate: false
+          description: ""
+          sortKey: -1776863857376
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQ4Mzc1LCJpYXQiOjE3NzY5NDExNzUsImp0aSI6IjYwNjk1MGVhNWUxZjQwODVhZDA4YjdiMDNlMjcwZjg0IiwidXNlcl9pZCI6IjIifQ.47-3-uzrBFSHxkRMxtsoLrO9gr-8ig2TQech5-ma-IU
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/sensores/
+        name: Criar
+        meta:
+          id: req_c6448f92ad684df696cef89d382df857
+          created: 1776941859717
+          modified: 1776944487139
+          isPrivate: false
+          description: ""
+          sortKey: -1776902858596.5
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"sensor": [
+            		"LUMINOSIDADE"
+            	],
+            	"unidade_med": [
+            		"lux"
+            	],
+            	"mic": [
+            		"EP60"
+            	]
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQ4Mzc1LCJpYXQiOjE3NzY5NDExNzUsImp0aSI6IjYwNjk1MGVhNWUxZjQwODVhZDA4YjdiMDNlMjcwZjg0IiwidXNlcl9pZCI6IjIifQ.47-3-uzrBFSHxkRMxtsoLrO9gr-8ig2TQech5-ma-IU
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/sensores/1/
+        name: Editar
+        meta:
+          id: req_d19af466943a42d6b3d10fd53e2bab18
+          created: 1776941896416
+          modified: 1776944415708
+          isPrivate: false
+          description: ""
+          sortKey: -1776941896416
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"sensor": [
+            		"LUMINOSIDADE"
+            	],
+            	"unidade_med": [
+            		"lux"
+            	],
+            	"mic": [
+            		"EP60"
+            	]
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQ4Mzc1LCJpYXQiOjE3NzY5NDExNzUsImp0aSI6IjYwNjk1MGVhNWUxZjQwODVhZDA4YjdiMDNlMjcwZjg0IiwidXNlcl9pZCI6IjIifQ.47-3-uzrBFSHxkRMxtsoLrO9gr-8ig2TQech5-ma-IU
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/sensores/1/
+        name: Excluir
+        meta:
+          id: req_818d91fca96b42f6933f537e3684dbbf
+          created: 1776941913691
+          modified: 1776944473157
+          isPrivate: false
+          description: ""
+          sortKey: -1776941913691
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQ4Mzc1LCJpYXQiOjE3NzY5NDExNzUsImp0aSI6IjYwNjk1MGVhNWUxZjQwODVhZDA4YjdiMDNlMjcwZjg0IiwidXNlcl9pZCI6IjIifQ.47-3-uzrBFSHxkRMxtsoLrO9gr-8ig2TQech5-ma-IU
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Filtros
+    meta:
+      id: fld_013eb8e8de0b4c7dafe5a6096dbd9630
+      created: 1776942140278
+      modified: 1776942140278
+      sortKey: -1776942140278
+      description: ""
+    children:
+      - url: http://127.0.0.1:8000/api/historicos/?sensor__sensor=TEMPERATURA
+        name: Tipo de Sensor
+        meta:
+          id: req_5c03112a92bf42abb76f7c3e2824b4d2
+          created: 1776942153725
+          modified: 1776945024174
+          isPrivate: false
+          description: ""
+          sortKey: -1776942153725
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQ4Mzc1LCJpYXQiOjE3NzY5NDExNzUsImp0aSI6IjYwNjk1MGVhNWUxZjQwODVhZDA4YjdiMDNlMjcwZjg0IiwidXNlcl9pZCI6IjIifQ.47-3-uzrBFSHxkRMxtsoLrO9gr-8ig2TQech5-ma-IU
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/historicos/?timestamp_min=2025-01-01T00:00:00&timestamp_max=2025-12-31T23:59:59
+        name: Historico
+        meta:
+          id: req_366cad01ba3f43c7942602dfd2a953b0
+          created: 1776942210554
+          modified: 1776943771957
+          isPrivate: false
+          description: ""
+          sortKey: -1776942153825
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQ4Mzc1LCJpYXQiOjE3NzY5NDExNzUsImp0aSI6IjYwNjk1MGVhNWUxZjQwODVhZDA4YjdiMDNlMjcwZjg0IiwidXNlcl9pZCI6IjIifQ.47-3-uzrBFSHxkRMxtsoLrO9gr-8ig2TQech5-ma-IU
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/historicos/recentes/
+        name: Ultimas 24h
+        meta:
+          id: req_c53f12c1bff64b19b77b7a5ead3e9d6d
+          created: 1776942244703
+          modified: 1776944928505
+          isPrivate: false
+          description: ""
+          sortKey: -1776942244703
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQ4Mzc1LCJpYXQiOjE3NzY5NDExNzUsImp0aSI6IjYwNjk1MGVhNWUxZjQwODVhZDA4YjdiMDNlMjcwZjg0IiwidXNlcl9pZCI6IjIifQ.47-3-uzrBFSHxkRMxtsoLrO9gr-8ig2TQech5-ma-IU
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/microcontroladores/?status=true
+        name: Micro por Status
+        meta:
+          id: req_23f1638a027b4599b141674a9e71cb11
+          created: 1776942264668
+          modified: 1776944874923
+          isPrivate: false
+          description: ""
+          sortKey: -1776942264668
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.5.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc2OTQ4Mzc1LCJpYXQiOjE3NzY5NDExNzUsImp0aSI6IjYwNjk1MGVhNWUxZjQwODVhZDA4YjdiMDNlMjcwZjg0IiwidXNlcl9pZCI6IjIifQ.47-3-uzrBFSHxkRMxtsoLrO9gr-8ig2TQech5-ma-IU
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_338261d03c53e11272e633dbb5d91b36df071bb3
+    created: 1776854881653
+    modified: 1776854881653
+environments:
+  name: Base Environment
+  meta:
+    id: env_338261d03c53e11272e633dbb5d91b36df071bb3
+    created: 1776854881645
+    modified: 1776854881645
+    isPrivate: false
+spec:
+  meta:
+    id: spc_ea30163ee0b54f8ba0b7747603dbe911
+    created: 1776854881636
+    modified: 1776940187854
