@@ -62,7 +62,7 @@ export default function Usuarios() {
               <td style={td}>{r.id}</td>
               <td style={td}>{r.nome}</td>
               <td style={td}>{r.telefone || '—'}</td>
-              <td style={td}><span style={{ color: r.tipo === 'ADMINISTRADOR' ? 'var(--accent)' : 'var(--muted)' }}>{r.tipo}</span></td>
+              <td style={td}><span style={{ color: r.tipo === 'ADMINISTRADOR' ? 'var(--blue-700)' : 'var(--muted)' }}>{r.tipo}</span></td>
               <td style={td}>
                 <button style={btnEdit}   onClick={() => abrirEditar(r)}>✏️ Editar</button>
                 <button style={btnDanger} onClick={() => excluir(r.id)}>🗑️ Excluir</button>

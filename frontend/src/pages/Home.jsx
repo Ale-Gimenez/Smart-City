@@ -4,10 +4,10 @@ import Layout from '../components/Layout';
 import api from '../api/axios';
 
 const cards = [
-  { label: 'Temperatura', tipo: 'TEMPERATURA', icon: '🌡️', unidade: '°C',  path: '/sensores/temperatura', cor: '#f43f5e' },
-  { label: 'Umidade',     tipo: 'UMIDADE',     icon: '💧', unidade: '%',   path: '/sensores/umidade',     cor: '#3b82f6' },
-  { label: 'Luminosidade',tipo: 'LUMINOSIDADE',icon: '💡', unidade: 'lux', path: '/sensores/luminosidade',cor: '#f59e0b' },
-  { label: 'Contador',    tipo: 'CONTADOR',    icon: '🔢', unidade: 'uni', path: '/sensores/contador',    cor: '#10b981' },
+  { label: 'Temperatura', tipo: 'TEMPERATURA', icon: '🌡️', unidade: '°C',  path: '/sensores/temperatura', cor: '#C0392B', bg: '#FFF0EE', border: '#F5C6C0' },
+  { label: 'Umidade',     tipo: 'UMIDADE',     icon: '💧', unidade: '%',   path: '/sensores/umidade',     cor: '#0057B8', bg: '#E8F0FE', border: '#BFCFEF' },
+  { label: 'Luminosidade',tipo: 'LUMINOSIDADE',icon: '💡', unidade: 'lux', path: '/sensores/luminosidade',cor: '#B45309', bg: '#FEF3E2', border: '#F5DAAA' },
+  { label: 'Contador',    tipo: 'CONTADOR',    icon: '🔢', unidade: 'uni', path: '/sensores/contador',    cor: '#1A7A4A', bg: '#E6F4ED', border: '#A8D9BC' },
 ];
 
 export default function Home() {
@@ -17,13 +17,9 @@ export default function Home() {
 
   useEffect(() => {
     api.get('api/me/').then(r => setUser(r.data)).catch(() => {});
-    // busca a última medição de cada tipo para mostrar no card
     cards.forEach(c => {
       api.get(`api/historicos/?sensor__sensor=${c.tipo}&ordering=-timestamp`)
-        .then(r => {
-          const lista = r.data;
-          if (lista.length) setStats(p => ({ ...p, [c.tipo]: lista[0].valor }));
-        })
+        .then(r => { if (r.data.length) setStats(p => ({ ...p, [c.tipo]: r.data[0].valor })); })
         .catch(() => {});
     });
   }, []);
@@ -31,58 +27,98 @@ export default function Home() {
   return (
     <Layout>
       <div style={s.wrap}>
-        <div style={s.header}>
-          <div>
-            <h1 style={s.title}>Dashboard</h1>
-            <p style={s.sub}>Smart City — TecnoVille</p>
-          </div>
-          {user && (
-            <div style={s.userBadge}>
-              <span style={s.userIcon}>👤</span>
-              <div>
-                <div style={{ color: 'var(--text)', fontSize: 13 }}>{user.nome}</div>
-                <div style={{ color: 'var(--muted)', fontSize: 11 }}>{user.tipo}</div>
-              </div>
+        {/* Topo */}
+        <div style={s.topBar}>
+          <div style={s.blueLine} />
+          <div style={s.header}>
+            <div>
+              <h1 style={s.title}>Dashboard</h1>
+              <p style={s.sub}>Visão geral dos sensores — SmartSENAI</p>
             </div>
-          )}
+            {user && (
+              <div style={s.userBadge}>
+                <div style={s.userAvatar}>
+                  {(user.nome || user.username || '?')[0].toUpperCase()}
+                </div>
+                <div>
+                  <div style={s.userName}>{user.nome}</div>
+                  <div style={s.userTipo}>{user.tipo}</div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
+        {/* Cards */}
         <div style={s.grid}>
           {cards.map(c => (
             <button
               key={c.tipo}
-              style={{ ...s.card, '--cor': c.cor }}
+              style={{ ...s.card, borderTop: `4px solid ${c.cor}`, background: 'var(--surface)' }}
               onClick={() => navigate(c.path)}
             >
-              <div style={{ ...s.cardAccent, background: c.cor }} />
-              <div style={s.cardIcon}>{c.icon}</div>
+              <div style={{ ...s.iconWrap, background: c.bg, border: `1px solid ${c.border}` }}>
+                <span style={{ fontSize: 24 }}>{c.icon}</span>
+              </div>
               <div style={s.cardLabel}>{c.label}</div>
               <div style={{ ...s.cardValue, color: c.cor }}>
                 {stats[c.tipo] !== undefined ? `${stats[c.tipo]} ${c.unidade}` : '—'}
               </div>
               <div style={s.cardHint}>Última leitura</div>
-              <div style={s.cardArrow}>Ver histórico →</div>
+              <div style={{ ...s.cardLink, color: c.cor }}>
+                Ver histórico →
+              </div>
             </button>
           ))}
         </div>
+
+        {/* Info rodapé */}
+        <p style={s.hint}>
+          💡 Acesse o menu lateral para gerenciar sensores, ambientes, medições e usuários.
+        </p>
       </div>
     </Layout>
   );
 }
 
 const s = {
-  wrap:       { padding: '2rem' },
-  header:     { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' },
-  title:      { fontFamily: 'var(--font-head)', fontSize: 28, fontWeight: 800, color: 'var(--text)' },
-  sub:        { color: 'var(--muted)', fontSize: 13, marginTop: 4 },
-  userBadge:  { display: 'flex', alignItems: 'center', gap: 10, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, padding: '0.6rem 1rem' },
-  userIcon:   { fontSize: 22 },
-  grid:       { display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1.2rem', maxWidth: 700 },
-  card:       { position: 'relative', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: '1.5rem', textAlign: 'left', cursor: 'pointer', overflow: 'hidden', transition: 'border-color .2s, transform .15s' },
-  cardAccent: { position: 'absolute', top: 0, left: 0, right: 0, height: 3, borderRadius: '12px 12px 0 0' },
-  cardIcon:   { fontSize: 32, marginBottom: '0.5rem' },
-  cardLabel:  { fontFamily: 'var(--font-head)', fontSize: 16, fontWeight: 700, color: 'var(--text)', marginBottom: 4 },
-  cardValue:  { fontSize: 26, fontWeight: 800, fontFamily: 'var(--font-head)', marginBottom: 2 },
-  cardHint:   { fontSize: 11, color: 'var(--muted)', marginBottom: '1rem' },
-  cardArrow:  { fontSize: 12, color: 'var(--accent)' },
+  wrap:       { padding: '0' },
+  topBar:     { background: 'var(--surface)', borderBottom: '1px solid var(--border)', marginBottom: '1.75rem' },
+  blueLine:   { height: 4, background: 'linear-gradient(90deg, var(--blue-900), var(--blue-500))' },
+  header:     { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem 2rem' },
+  title:      { fontFamily: 'var(--font-head)', fontSize: 22, fontWeight: 700, color: 'var(--text)' },
+  sub:        { color: 'var(--muted)', fontSize: 13, marginTop: 2 },
+  userBadge:  {
+    display: 'flex', alignItems: 'center', gap: 10,
+    background: 'var(--blue-50)', border: '1px solid var(--border)',
+    borderRadius: 8, padding: '0.55rem 0.9rem',
+  },
+  userAvatar: {
+    width: 32, height: 32, borderRadius: '50%',
+    background: 'var(--blue-700)', color: '#fff',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    fontWeight: 700, fontSize: 14, flexShrink: 0,
+  },
+  userName:   { fontSize: 13, fontWeight: 600, color: 'var(--text)' },
+  userTipo:   { fontSize: 11, color: 'var(--muted)' },
+  grid:       {
+    display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)',
+    gap: '1.25rem', maxWidth: 680, padding: '0 2rem',
+  },
+  card:       {
+    border: '1px solid var(--border)', borderRadius: 12,
+    padding: '1.4rem', textAlign: 'left', cursor: 'pointer',
+    boxShadow: 'var(--shadow-sm)', transition: 'box-shadow .15s, transform .12s',
+    display: 'flex', flexDirection: 'column', gap: 4,
+  },
+  iconWrap:   {
+    width: 48, height: 48, borderRadius: 10,
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    marginBottom: 6,
+  },
+  cardLabel:  { fontFamily: 'var(--font-head)', fontSize: 14, fontWeight: 600, color: 'var(--muted)' },
+  cardValue:  { fontSize: 28, fontWeight: 700, fontFamily: 'var(--font-head)', lineHeight: 1.1 },
+  cardHint:   { fontSize: 11, color: 'var(--muted)' },
+  cardLink:   { fontSize: 12, fontWeight: 600, marginTop: 8 },
+  hint:       { padding: '1.5rem 2rem', color: 'var(--muted)', fontSize: 13 },
 };

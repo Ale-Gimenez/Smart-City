@@ -1,6 +1,9 @@
-# 🏙️ Smart City — TecnoVille
+# ⚡ SmartSENAI — Sistema de Monitoramento Ambiental
 
-Sistema de monitoramento ambiental para a escola TecnoVille, com sensores de temperatura, umidade, luminosidade e contador. Desenvolvido com **Django REST Framework** no back-end e **React + Vite** no front-end.
+Sistema de monitoramento de sensores ambientais para a escola TecnoVille, desenvolvido com **Django REST Framework** no back-end e **React + Vite** no front-end. Coleta e visualiza dados em tempo real de temperatura, umidade, luminosidade e contadores instalados em ambientes da escola.
+
+Desenvolvido por: Alejandra Michelle Giménez Luján
+Turma: Desenvolvimento de Sistemas 2 (2DS-MB)
 
 ---
 
@@ -19,7 +22,7 @@ Sistema de monitoramento ambiental para a escola TecnoVille, com sensores de tem
 - [Autenticação JWT](#autenticação-jwt)
 - [Funcionalidades do Front-end](#funcionalidades-do-front-end)
 - [Regras de Negócio](#regras-de-negócio)
-- [Estrutura de Pastas](#estrutura-de-pastas)
+- [Dependências](#dependências)
 
 ---
 
@@ -29,31 +32,32 @@ O sistema coleta dados de sensores instalados em ambientes da escola (praças, c
 
 **Tipos de sensor suportados:**
 
-| Sensor       | Unidade |
-|--------------|---------|
-| Temperatura  | °C      |
-| Umidade      | %       |
-| Luminosidade | lux     |
-| Contador     | uni     |
+| Sensor       | Unidade | Choices (banco) |
+|--------------|---------|-----------------|
+| Temperatura  | °C      | `TEMPERATURA`   |
+| Umidade      | %       | `UMIDADE`       |
+| Luminosidade | lux     | `LUMINOSIDADE`  |
+| Contador     | uni     | `CONTADOR`      |
 
 ---
 
 ## 🛠️ Tecnologias
 
 **Back-end:**
-- Python 3.x
+- Python 3.10+
 - Django 6.0.4
 - Django REST Framework 3.17.1
 - djangorestframework-simplejwt 5.5.1
 - django-filter 25.2
 - django-cors-headers 4.9.0
-- MySQL (via mysqlclient 2.2.8 + PyMySQL 1.1.2)
+- MySQL (mysqlclient 2.2.8 + PyMySQL 1.1.2)
 - Pandas 3.0.2 + openpyxl 3.1.5 (importação de planilhas)
 
 **Front-end:**
 - React 19 + Vite
 - React Router DOM 7
 - Axios 1.x
+- Google Fonts: DM Sans + DM Mono
 
 ---
 
@@ -63,64 +67,70 @@ O sistema coleta dados de sensores instalados em ambientes da escola (praças, c
 Smart-City/
 ├── backend/
 │   ├── api/
-│   │   ├── models.py         # Modelos do banco
-│   │   ├── serializers.py    # Serializers DRF
-│   │   ├── views.py          # ViewSets + views de importação
-│   │   ├── urls.py           # Rotas da API
-│   │   ├── filters.py        # Filtros django-filter
-│   │   ├── permissions.py    # IsAdminOrReadOnly
-│   │   ├── admin.py          # Registro no Django Admin
-│   │   └── migrations/       # Migrações do banco
+│   │   ├── __init__.py
+│   │   ├── admin.py          # Registro de todos os models no Django Admin
+│   │   ├── apps.py
+│   │   ├── filters.py        # Filtros django-filter para cada endpoint
+│   │   ├── models.py         # Modelos: Sensores, Historicos, Ambientes, etc.
+│   │   ├── permissions.py    # IsAdminOrReadOnly (Admin: CRUD / Usuário: só leitura)
+│   │   ├── serializers.py    # Serializers DRF + RegisterSerializer + UsuarioMeSerializer
+│   │   ├── tests.py
+│   │   ├── urls.py           # Rotas da API (ViewSets + endpoints de importação)
+│   │   └── views.py          # ViewSets, RegisterView, UsuarioMeView, importar_*
 │   ├── config/
-│   │   ├── settings.py       # Configurações Django
-│   │   └── urls.py           # URLs raiz
+│   │   ├── __init__.py
+│   │   ├── asgi.py
+│   │   ├── settings.py       # Configurações Django (DB, JWT, CORS, etc.)
+│   │   ├── urls.py           # URLs raiz: /admin/ e /api/
+│   │   └── wsgi.py
 │   ├── manage.py
 │   └── requirements.txt
+│
 ├── frontend/
 │   ├── src/
 │   │   ├── api/
-│   │   │   └── axios.js      # Instância Axios + interceptors JWT
+│   │   │   └── axios.js           # Instância Axios com interceptor JWT (401 → logout)
+│   │   ├── assets/
+│   │   │   ├── hero.png
+│   │   │   ├── react.svg
+│   │   │   └── vite.svg
 │   │   ├── components/
-│   │   │   ├── Layout.jsx    # Sidebar + navegação
-│   │   │   ├── Modal.jsx     # Modal reutilizável
-│   │   │   ├── Table.jsx     # Tabela reutilizável
-│   │   │   ├── FormField.jsx # Campo de formulário + estilos
-│   │   │   └── PrivateRoute.jsx
+│   │   │   ├── FormField.jsx      # Label + campo; exporta estilos btnPrimary, btnEdit, btnDanger, input
+│   │   │   ├── Layout.jsx         # Sidebar com navegação completa + botão de logout
+│   │   │   ├── Modal.jsx          # Modal reutilizável para formulários
+│   │   │   ├── PrivateRoute.jsx   # Proteção de rotas: redireciona para /login sem token
+│   │   │   └── Table.jsx          # Tabela reutilizável com zebra striping
 │   │   ├── pages/
-│   │   │   ├── Login.jsx
-│   │   │   ├── Home.jsx      # Dashboard com última leitura por sensor
-│   │   │   ├── sensores/     # Histórico por tipo de sensor
-│   │   │   │   ├── Temperatura.jsx
-│   │   │   │   ├── Umidade.jsx
-│   │   │   │   ├── Luminosidade.jsx
-│   │   │   │   └── Contador.jsx
-│   │   │   └── crud/         # CRUD completo de cada entidade
-│   │   │       ├── Sensores.jsx
-│   │   │       ├── Microcontroladores.jsx
-│   │   │       ├── Ambientes.jsx
-│   │   │       ├── Locais.jsx
-│   │   │       ├── Responsaveis.jsx
-│   │   │       ├── Usuarios.jsx
-│   │   │       └── Historicos.jsx
-│   │   ├── App.jsx           # Rotas
-│   │   ├── main.jsx
-│   │   └── index.css         # Tema dark global
+│   │   │   ├── Home.jsx           # Dashboard com cards dos 4 sensores e última leitura
+│   │   │   ├── Login.jsx          # Autenticação JWT; armazena token no localStorage
+│   │   │   ├── crud/
+│   │   │   │   ├── Ambientes.jsx       # CRUD: Ambientes (FK: Local, Responsável)
+│   │   │   │   ├── Historicos.jsx      # CRUD: Medições, com filtro por tipo de sensor
+│   │   │   │   ├── Locais.jsx          # CRUD: Locais físicos
+│   │   │   │   ├── Microcontroladores.jsx  # CRUD: Microcontroladores (FK: Ambiente)
+│   │   │   │   ├── Responsaveis.jsx    # CRUD: Responsáveis por ambientes
+│   │   │   │   ├── Sensores.jsx        # CRUD: Sensores (FK: Microcontrolador)
+│   │   │   │   └── Usuarios.jsx        # CRUD: Usuários (criação via /api/register/)
+│   │   │   └── sensores/
+│   │   │       ├── Contador.jsx        # Histórico filtrado: CONTADOR
+│   │   │       ├── Luminosidade.jsx    # Histórico filtrado: LUMINOSIDADE
+│   │   │       ├── Temperatura.jsx     # Histórico filtrado: TEMPERATURA
+│   │   │       └── Umidade.jsx         # Histórico filtrado: UMIDADE
+│   │   ├── App.css            # (vazio — estilos centralizados no index.css)
+│   │   ├── App.jsx            # Definição de todas as rotas com PrivateRoute
+│   │   ├── index.css          # Tema global: variáveis CSS, tipografia DM Sans/DM Mono
+│   │   └── main.jsx           # Entry point React
 │   ├── package.json
 │   └── vite.config.js
-└── population/               # Planilhas para popular o banco
-    ├── locais.xlsx
-    ├── responsaveis.xlsx
-    ├── ambientes.xlsx
-    ├── microcontroladores.xlsx
-    ├── sensores.xlsx
-    └── historicos.xlsx
+│
+└── README.md
 ```
+
+> **Nota:** a pasta `population/` com as planilhas `.xlsx` para popular o banco é fornecida pelo professor separadamente.
 
 ---
 
 ## ✅ Pré-requisitos
-
-Antes de começar, certifique-se de ter instalado:
 
 - **Python** 3.10 ou superior → https://python.org
 - **MySQL** 8.0 ou superior → https://dev.mysql.com/downloads/
@@ -131,13 +141,13 @@ Antes de começar, certifique-se de ter instalado:
 
 ## 🗄️ Configuração do Banco de Dados
 
-1. Abra o MySQL e crie o banco de dados:
+1. Abra o MySQL e crie o banco:
 
 ```sql
 CREATE DATABASE smartcity CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-2. Verifique (ou ajuste) as credenciais em `backend/config/settings.py`:
+2. Ajuste as credenciais em `backend/config/settings.py` se necessário:
 
 ```python
 DATABASES = {
@@ -165,7 +175,6 @@ python -m venv venv
 
 # Windows:
 venv\Scripts\activate
-
 # Linux/Mac:
 source venv/bin/activate
 
@@ -175,41 +184,13 @@ pip install -r requirements.txt
 # 4. Aplicar as migrações
 python manage.py migrate
 
-# 5. Criar o superusuário padrão (ver seção abaixo)
-
-# 6. Iniciar o servidor
+# 5. Iniciar o servidor
 python manage.py runserver
 ```
 
 O servidor estará disponível em: **http://127.0.0.1:8000/**
 
----
-
-## 👤 Criando o Superusuário
-
-O projeto utiliza o superusuário padrão definido no PDF:
-
-```bash
-python manage.py createsuperuser
-```
-
-Quando solicitado, informe:
-- **Username:** `senai`
-- **Password:** `123`
-
-Após criar o usuário Django, crie também o perfil na tabela `Usuarios` via Django Admin ou pelo endpoint `/api/register/`:
-
-```json
-POST /api/register/
-{
-  "username": "senai",
-  "password": "123",
-  "nome": "Administrador SENAI",
-  "tipo": "ADMINISTRADOR"
-}
-```
-
-> O Django Admin está disponível em **http://127.0.0.1:8000/admin/** com as mesmas credenciais.
+> O Django Admin fica em **http://127.0.0.1:8000/admin/**
 
 ---
 
@@ -228,29 +209,72 @@ npm run dev
 
 O front-end estará disponível em: **http://localhost:5173/**
 
-> **Atenção:** o back-end precisa estar rodando na porta `8000` antes de iniciar o front-end.
+> O back-end precisa estar rodando antes de iniciar o front-end.
+
+---
+
+## 👤 Criando o Superusuário
+
+```bash
+python manage.py createsuperuser
+```
+
+Quando solicitado, informe:
+- **Username:** `senai`
+- **Password:** `123`
+
+Em seguida, crie o perfil na tabela `Usuarios` via endpoint:
+
+```json
+POST /api/register/
+{
+  "username": "senai",
+  "password": "123",
+  "nome": "Administrador SENAI",
+  "tipo": "ADMINISTRADOR"
+}
+```
 
 ---
 
 ## 📊 Populando o Banco de Dados
 
-As planilhas para popular o banco estão na pasta `population/`. Importe-as **nesta ordem** (respeitando as dependências entre tabelas) via Postman, Insomnia ou a interface do front-end (se implementada):
+Importe as planilhas **nessa ordem** — cada etapa depende da anterior:
 
-| Ordem | Endpoint                          | Arquivo                    |
-|-------|-----------------------------------|----------------------------|
-| 1º    | `POST /api/importar/locais/`      | `locais.xlsx`              |
-| 2º    | `POST /api/importar/responsaveis/`| `responsaveis.xlsx`        |
-| 3º    | `POST /api/importar/ambientes/`   | `ambientes.xlsx`           |
-| 4º    | `POST /api/importar/microcontroladores/` | `microcontroladores.xlsx` |
-| 5º    | `POST /api/importar/sensores/`    | `sensores.xlsx`            |
-| 6º    | `POST /api/importar/historicos/`  | `historicos.xlsx`          |
+| Ordem | Endpoint                                   | Planilha                   |
+|-------|--------------------------------------------|----------------------------|
+| 1º    | `POST /api/importar/locais/`               | `locais.xlsx`              |
+| 2º    | `POST /api/importar/responsaveis/`         | `responsaveis.xlsx`        |
+| 3º    | `POST /api/importar/ambientes/`            | `ambientes.xlsx`           |
+| 4º    | `POST /api/importar/microcontroladores/`   | `microcontroladores.xlsx`  |
+| 5º    | `POST /api/importar/sensores/`             | `sensores.xlsx`            |
+| 6º    | `POST /api/importar/historicos/`           | `historicos.xlsx`          |
 
-**Como importar com Postman:**
+**Como importar no Postman/Insomnia:**
 
-1. Autentique-se em `POST /api/token/` e copie o `access` token
-2. No header: `Authorization: Bearer <token>`
-3. Em Body → `form-data`: chave `file`, tipo `File`, selecione a planilha
-4. Envie a requisição
+1. Obtenha o token em `POST /api/token/` com `{ "username": "senai", "password": "123" }`
+2. Adicione o header: `Authorization: Bearer <access_token>`
+3. Body → `form-data` → chave `file`, tipo `File` → selecione a planilha
+4. Envie para o endpoint correspondente
+
+**Se precisar reimportar do zero**, limpe as tabelas respeitando as FK:
+
+```sql
+SET FOREIGN_KEY_CHECKS = 0;
+DELETE FROM api_historicos;
+DELETE FROM api_sensores;
+DELETE FROM api_microcontroladores;
+DELETE FROM api_ambientes;
+DELETE FROM api_responsaveis;
+DELETE FROM api_locais;
+ALTER TABLE api_historicos          AUTO_INCREMENT = 1;
+ALTER TABLE api_sensores            AUTO_INCREMENT = 1;
+ALTER TABLE api_microcontroladores  AUTO_INCREMENT = 1;
+ALTER TABLE api_ambientes           AUTO_INCREMENT = 1;
+ALTER TABLE api_responsaveis        AUTO_INCREMENT = 1;
+ALTER TABLE api_locais              AUTO_INCREMENT = 1;
+SET FOREIGN_KEY_CHECKS = 1;
+```
 
 ---
 
@@ -258,116 +282,87 @@ As planilhas para popular o banco estão na pasta `population/`. Importe-as **ne
 
 ### Autenticação
 
-| Método | Endpoint          | Descrição                        |
-|--------|-------------------|----------------------------------|
-| POST   | `/api/token/`     | Obtém o par de tokens JWT        |
-| POST   | `/api/refresh/`   | Renova o access token            |
-| POST   | `/api/register/`  | Cadastra novo usuário            |
-| GET    | `/api/me/`        | Dados do usuário autenticado     |
+| Método | Endpoint         | Descrição                     |
+|--------|------------------|-------------------------------|
+| POST   | `/api/token/`    | Obtém o par de tokens JWT     |
+| POST   | `/api/refresh/`  | Renova o access token         |
+| POST   | `/api/register/` | Cadastra novo usuário         |
+| GET    | `/api/me/`       | Dados do usuário autenticado  |
 
-### Recursos principais (CRUD completo)
+### Recursos — CRUD completo
 
-| Método          | Endpoint                      | Descrição                      |
-|-----------------|-------------------------------|--------------------------------|
-| GET / POST      | `/api/sensores/`              | Lista / cria sensores          |
-| GET/PUT/DELETE  | `/api/sensores/{id}/`         | Detalhe / edita / exclui       |
-| GET / POST      | `/api/microcontroladores/`    | Lista / cria microcontroladores|
-| GET/PUT/DELETE  | `/api/microcontroladores/{id}/` | Detalhe / edita / exclui     |
-| GET / POST      | `/api/ambientes/`             | Lista / cria ambientes         |
-| GET/PUT/DELETE  | `/api/ambientes/{id}/`        | Detalhe / edita / exclui       |
-| GET / POST      | `/api/locais/`                | Lista / cria locais            |
-| GET/PUT/DELETE  | `/api/locais/{id}/`           | Detalhe / edita / exclui       |
-| GET / POST      | `/api/responsaveis/`          | Lista / cria responsáveis      |
-| GET/PUT/DELETE  | `/api/responsaveis/{id}/`     | Detalhe / edita / exclui       |
-| GET / POST      | `/api/historicos/`            | Lista / registra medições      |
-| GET/PUT/DELETE  | `/api/historicos/{id}/`       | Detalhe / edita / exclui       |
-| GET             | `/api/historicos/recentes/`   | Medições das últimas 24h       |
-| GET / POST      | `/api/usuarios/`              | Lista / cria usuários          |
-| GET/PUT/DELETE  | `/api/usuarios/{id}/`         | Detalhe / edita / exclui       |
+| Endpoint                        | Descrição                       |
+|---------------------------------|---------------------------------|
+| `/api/sensores/`                | Sensores                        |
+| `/api/microcontroladores/`      | Microcontroladores              |
+| `/api/ambientes/`               | Ambientes                       |
+| `/api/locais/`                  | Locais                          |
+| `/api/responsaveis/`            | Responsáveis                    |
+| `/api/historicos/`              | Medições                        |
+| `/api/historicos/recentes/`     | Medições das últimas 24h (GET)  |
+| `/api/usuarios/`                | Usuários                        |
+
+Todos os endpoints de recursos aceitam `GET`, `POST`, `PUT`, `PATCH` e `DELETE` (exceto `recentes/` que é somente `GET`).
 
 ### Filtros disponíveis
 
 ```
-# Filtrar histórico por tipo de sensor
 GET /api/historicos/?sensor__sensor=TEMPERATURA
 GET /api/historicos/?sensor__sensor=UMIDADE
 GET /api/historicos/?sensor__sensor=LUMINOSIDADE
 GET /api/historicos/?sensor__sensor=CONTADOR
-
-# Filtrar histórico por faixa de data
-GET /api/historicos/?timestamp_min=2025-01-01T00:00:00&timestamp_max=2025-12-31T23:59:59
-
-# Filtrar sensores por tipo e status
+GET /api/historicos/?timestamp_min=2025-01-01T00:00:00
+GET /api/historicos/?timestamp_max=2025-12-31T23:59:59
 GET /api/sensores/?sensor=TEMPERATURA&status=true
-
-# Filtrar microcontroladores por status
 GET /api/microcontroladores/?status=true
-
-# Medições das últimas 24h
 GET /api/historicos/recentes/
 ```
 
 ### Importação de planilhas
 
-| Método | Endpoint                              |
-|--------|---------------------------------------|
-| POST   | `/api/importar/locais/`               |
-| POST   | `/api/importar/responsaveis/`         |
-| POST   | `/api/importar/ambientes/`            |
-| POST   | `/api/importar/microcontroladores/`   |
-| POST   | `/api/importar/sensores/`             |
-| POST   | `/api/importar/historicos/`           |
+| Método | Endpoint                                  |
+|--------|-------------------------------------------|
+| POST   | `/api/importar/locais/`                   |
+| POST   | `/api/importar/responsaveis/`             |
+| POST   | `/api/importar/ambientes/`                |
+| POST   | `/api/importar/microcontroladores/`       |
+| POST   | `/api/importar/sensores/`                 |
+| POST   | `/api/importar/historicos/`               |
 
 ---
 
 ## 🔐 Autenticação JWT
 
-Todos os endpoints (exceto `/api/token/` e `/api/register/`) exigem autenticação.
-
-**1. Obter o token:**
+**Obter token:**
 
 ```bash
 POST /api/token/
 Content-Type: application/json
 
-{
-  "username": "senai",
-  "password": "123"
-}
+{ "username": "senai", "password": "123" }
 ```
 
-**Resposta:**
-
-```json
-{
-  "access": "eyJhbGciOiJIUzI1NiIs...",
-  "refresh": "eyJhbGciOiJIUzI1NiIs..."
-}
-```
-
-**2. Usar o token nas requisições:**
+**Usar nas requisições:**
 
 ```
-Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
+Authorization: Bearer <access_token>
 ```
 
-**3. Renovar o token (expira em 30 minutos):**
+**Renovar (expira em 30 min):**
 
 ```bash
 POST /api/refresh/
 Content-Type: application/json
 
-{
-  "refresh": "eyJhbGciOiJIUzI1NiIs..."
-}
+{ "refresh": "<refresh_token>" }
 ```
 
 **Níveis de acesso:**
 
-| Tipo          | Permissões                        |
-|---------------|-----------------------------------|
-| ADMINISTRADOR | CRUD completo em todos os recursos|
-| USUARIO       | Somente leitura (GET)             |
+| Tipo          | Permissões                         |
+|---------------|------------------------------------|
+| ADMINISTRADOR | CRUD completo em todos os recursos |
+| USUARIO       | Somente leitura (GET)              |
 
 ---
 
@@ -390,42 +385,54 @@ Content-Type: application/json
                └── /crud/historicos
 ```
 
-### Páginas disponíveis
+### Páginas
 
-- **Login** — autenticação com JWT, armazenamento do token no `localStorage`, redirecionamento automático
-- **Home (Dashboard)** — cards para os 4 tipos de sensor com a última leitura de cada um, dados do usuário logado
-- **Temperatura / Umidade / Luminosidade / Contador** — histórico de medições em tabela, filtrado por tipo
-- **CRUD Sensores** — listagem em tabela, criar/editar/excluir via modal
-- **CRUD Microcontroladores** — listagem com status ativo/inativo, edição completa
-- **CRUD Ambientes** — com seleção de Local e Responsável via dropdown
-- **CRUD Locais** — gerenciamento de locais físicos
-- **CRUD Responsáveis** — gerenciamento de responsáveis
-- **CRUD Usuários** — criação via `/api/register/`, edição de perfil, definição de tipo (Admin/Usuário)
-- **CRUD Medições** — filtro por tipo de sensor, registro manual de medições
+| Página | Descrição |
+|--------|-----------|
+| Login | Autenticação JWT; token armazenado no `localStorage`; redirecionamento automático |
+| Home | Dashboard com cards dos 4 tipos de sensor mostrando a última leitura de cada um |
+| Temperatura / Umidade / Luminosidade / Contador | Histórico de medições em tabela, filtrado por tipo |
+| CRUD Sensores | Listagem + criar/editar/excluir via modal |
+| CRUD Microcontroladores | Com status ativo/inativo e FK para Ambiente |
+| CRUD Ambientes | Com dropdowns para Local e Responsável |
+| CRUD Locais | Gerenciamento de locais físicos |
+| CRUD Responsáveis | Gerenciamento de responsáveis |
+| CRUD Usuários | Criação via `/api/register/`; edição de perfil via PATCH |
+| CRUD Medições | Filtro por tipo de sensor; validação de sensor inativo |
 
-### Comportamentos implementados
+### Comportamentos
 
-- **Proteção de rotas:** páginas sem token redirecionam para `/login` automaticamente
-- **Tratamento de erro 401:** token expirado → logout automático + redirecionamento para login
-- **Logout:** remove o token do `localStorage` e redireciona para login
-- **Formulários com FK:** selects populados dinamicamente com dados da API
+- **Proteção de rotas** — sem token válido redireciona para `/login`
+- **Erro 401** — token expirado faz logout automático e redireciona para login
+- **Logout** — remove token do `localStorage` e redireciona
+- **Selects dinâmicos** — dropdowns de FK populados via chamadas à API
+
+### Identidade visual
+
+- **Nome:** SmartSENAI
+- **Tema:** claro (fundo `#F7F9FC`, superfícies `#FFFFFF`)
+- **Cor primária:** `#0057B8` — contraste **4.6:1** sobre branco (WCAG AA)
+- **Acessibilidade para daltônicos:** todas as cores semânticas com contraste mínimo 4.5:1
+- **Tipografia:** DM Sans (interface) + DM Mono (código/monospace)
 
 ---
 
 ## ⚙️ Regras de Negócio
 
-1. **Sensor inativo não aceita medições** — ao tentar registrar um histórico para um sensor com `status = false`, a API retorna erro 400:
+1. **Sensor inativo não aceita medições** — ao registrar um histórico para sensor com `status = false`, a API retorna 400:
    ```json
    { "erro": "Não é possível registrar medições para um sensor inativo." }
    ```
 
-2. **Níveis de usuário** — `ADMINISTRADOR` tem acesso completo (CRUD); `USUARIO` tem acesso somente leitura.
+2. **Níveis de usuário** — `ADMINISTRADOR` tem CRUD completo; `USUARIO` tem somente leitura.
 
-3. **Importação de planilhas** — a importação de ambientes depende de Locais e Responsáveis já cadastrados; a importação de sensores depende de Microcontroladores; a importação de históricos depende de Sensores.
+3. **Normalização na importação** — valores da planilha como `Temperatura` e `ºC` são automaticamente convertidos para `TEMPERATURA` e `°C` (choices do model).
+
+4. **Ordem de importação** — ambientes dependem de locais e responsáveis; microcontroladores dependem de ambientes; sensores dependem de microcontroladores; históricos dependem de sensores.
 
 ---
 
-## 📦 Dependências completas
+## 📦 Dependências
 
 **Back-end (`requirements.txt`):**
 
@@ -448,7 +455,7 @@ sqlparse==0.5.5
 tzdata==2026.1
 ```
 
-**Front-end (`package.json`):**
+**Front-end (`package.json` — dependências principais):**
 
 ```json
 "dependencies": {
@@ -461,20 +468,10 @@ tzdata==2026.1
 
 ---
 
-## 🧪 Testando a API
-
-Recomenda-se usar **Postman** ou **Insomnia**. Passos básicos:
-
-1. Crie uma requisição `POST` para `http://127.0.0.1:8000/api/token/` com body JSON `{ "username": "senai", "password": "123" }`
-2. Copie o campo `access` da resposta
-3. Em todas as próximas requisições, adicione o header: `Authorization: Bearer <access_token>`
-4. Explore os endpoints listados na seção acima
-
----
-
 ## 📝 Observações
 
-- O projeto foi desenvolvido como **trabalho individual** para a disciplina PWBE do SENAI "Roberto Mange"
-- Banco de dados configurado para **MySQL** — não é compatível com SQLite sem alteração no `settings.py`
-- O token JWT expira em **30 minutos**; use o endpoint `/api/refresh/` para renová-lo
-- Em produção, altere o `SECRET_KEY` e desative o `DEBUG` no `settings.py`
+- Trabalho individual — PWBE, SENAI "Roberto Mange"
+- Banco de dados configurado para **MySQL** — não compatível com SQLite sem alterar `settings.py`
+- Token JWT expira em **30 minutos** — use `/api/refresh/` para renová-lo
+- Em produção, altere o `SECRET_KEY` e configure `DEBUG = False` no `settings.py`
+- Todas as URLs da API terminam com `/` — requisições sem barra final retornam erro 500
