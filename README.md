@@ -289,18 +289,58 @@ SET FOREIGN_KEY_CHECKS = 1;
 | POST   | `/api/register/` | Cadastra novo usuário         |
 | GET    | `/api/me/`       | Dados do usuário autenticado  |
 
-### Recursos — CRUD completo
+## 🔌 Endpoints da API
 
-| Endpoint                        | Descrição                       |
-|---------------------------------|---------------------------------|
-| `/api/sensores/`                | Sensores                        |
-| `/api/microcontroladores/`      | Microcontroladores              |
-| `/api/ambientes/`               | Ambientes                       |
-| `/api/locais/`                  | Locais                          |
-| `/api/responsaveis/`            | Responsáveis                    |
-| `/api/historicos/`              | Medições                        |
-| `/api/historicos/recentes/`     | Medições das últimas 24h (GET)  |
-| `/api/usuarios/`                | Usuários                        |
+### Autenticação
+
+| Método | Endpoint          | Descrição                        |
+|--------|-------------------|----------------------------------|
+| POST   | `/api/token/`     | Obtém o par de tokens JWT        |
+| POST   | `/api/refresh/`   | Renova o access token            |
+| POST   | `/api/register/`  | Cadastra novo usuário            |
+| GET    | `/api/me/`        | Dados do usuário autenticado     |
+
+### Recursos principais (CRUD completo)
+
+| Método          | Endpoint                      | Descrição                      |
+|-----------------|-------------------------------|--------------------------------|
+| GET / POST      | `/api/sensores/`              | Lista / cria sensores          |
+| GET/PUT/DELETE  | `/api/sensores/{id}/`         | Detalhe / edita / exclui       |
+| GET / POST      | `/api/microcontroladores/`    | Lista / cria microcontroladores|
+| GET/PUT/DELETE  | `/api/microcontroladores/{id}/` | Detalhe / edita / exclui     |
+| GET / POST      | `/api/ambientes/`             | Lista / cria ambientes         |
+| GET/PUT/DELETE  | `/api/ambientes/{id}/`        | Detalhe / edita / exclui       |
+| GET / POST      | `/api/locais/`                | Lista / cria locais            |
+| GET/PUT/DELETE  | `/api/locais/{id}/`           | Detalhe / edita / exclui       |
+| GET / POST      | `/api/responsaveis/`          | Lista / cria responsáveis      |
+| GET/PUT/DELETE  | `/api/responsaveis/{id}/`     | Detalhe / edita / exclui       |
+| GET / POST      | `/api/historicos/`            | Lista / registra medições      |
+| GET/PUT/DELETE  | `/api/historicos/{id}/`       | Detalhe / edita / exclui       |
+| GET             | `/api/historicos/recentes/`   | Medições das últimas 24h       |
+| GET / POST      | `/api/usuarios/`              | Lista / cria usuários          |
+| GET/PUT/DELETE  | `/api/usuarios/{id}/`         | Detalhe / edita / exclui       |
+
+### Filtros disponíveis
+
+```
+# Filtrar histórico por tipo de sensor
+GET /api/historicos/?sensor__sensor=TEMPERATURA
+GET /api/historicos/?sensor__sensor=UMIDADE
+GET /api/historicos/?sensor__sensor=LUMINOSIDADE
+GET /api/historicos/?sensor__sensor=CONTADOR
+
+# Filtrar histórico por faixa de data
+GET /api/historicos/?timestamp_min=2025-01-01T00:00:00&timestamp_max=2025-12-31T23:59:59
+
+# Filtrar sensores por tipo e status
+GET /api/sensores/?sensor=TEMPERATURA&status=true
+
+# Filtrar microcontroladores por status
+GET /api/microcontroladores/?status=true
+
+# Medições das últimas 24h
+GET /api/historicos/recentes/
+```
 
 Todos os endpoints de recursos aceitam `GET`, `POST`, `PUT`, `PATCH` e `DELETE` (exceto `recentes/` que é somente `GET`).
 

@@ -88,7 +88,7 @@ class Usuarios(models.Model):
 @receiver(post_save, sender=User)
 def criar_perfil_usuario(sender, instance, created, **kwargs):
     if created:
-        tipo = "ADMINISTRADOR" if instance.is_superuser else "COMUM"
+        tipo = "ADMINISTRADOR" if instance.is_superuser else "USUARIO"
         
         Usuarios.objects.get_or_create(
             user=instance,

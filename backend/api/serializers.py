@@ -73,13 +73,6 @@ class RegisterSerializer(serializers.Serializer):
             user.is_superuser = False
             user.save()
 
-        Usuarios.objects.create(
-            user=user,
-            nome=nome if nome else user.username,
-            telefone=telefone,
-            tipo=tipo
-        )
-
         return user
 
 
