@@ -41,7 +41,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30), #Aqui é quantos minutos o token dura, dá para editar
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=120), #Aqui é quantos minutos o token dura, dá para editar
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
@@ -83,7 +83,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'smartcity',
         'USER': 'root',
-        'PASSWORD': 'root',
+        'PASSWORD': 'taiVoeL9Thuz',
         'HOST': '127.0.0.1',
         'PORT': '3306',
         # 'OPTIONS':{

@@ -130,15 +130,12 @@ def importar_locais(request):
         if 'local' not in df.columns:
             return Response({"detail": "Coluna obrigatória ausente: local"}, status=status.HTTP_400_BAD_REQUEST)
 
-        criados, ignorados = 0, 0
+        criados = 0
         for _, row in df.iterrows():
-            _, created = Locais.objects.get_or_create(local=row['local'])
-            if created:
-                criados += 1
-            else:
-                ignorados += 1
+            Locais.objects.create(local=str(row['local']).strip())
+            criados += 1
 
-        return Response({"detail": "Importação concluída.", "criados": criados, "ignorados (já existiam)": ignorados})
+        return Response({"detail": "Importação concluída.", "criados": criados})
     except Exception as e:
         return Response({"detail": f"Erro ao importar arquivo: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -155,18 +152,46 @@ def importar_responsaveis(request):
         if 'responsavel' not in df.columns:
             return Response({"detail": "Coluna obrigatória ausente: responsavel"}, status=status.HTTP_400_BAD_REQUEST)
 
-        criados, ignorados = 0, 0
+        criados = 0
         for _, row in df.iterrows():
-            # CORREÇÃO: campo do model é 'nome', planilha usa 'responsavel'
-            _, created = Responsaveis.objects.get_or_create(nome=row['responsavel'])
-            if created:
-                criados += 1
-            else:
-                ignorados += 1
+            Responsaveis.objects.create(nome=str(row['responsavel']).strip())
+            criados += 1
 
-        return Response({"detail": "Importação concluída.", "criados": criados, "ignorados (já existiam)": ignorados})
+        return Response({"detail": "Importação concluída.", "criados": criados})
     except Exception as e:
         return Response({"detail": f"Erro ao importar arquivo: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+def _buscar_local(valor):
+    """Aceita ID numérico ou o texto do campo 'local'."""
+    try:
+        return Locais.objects.get(pk=int(valor))
+    except (ValueError, TypeError):
+        return Locais.objects.get(local=str(valor).strip())
+
+
+def _buscar_responsavel(valor):
+    """Aceita ID numérico ou o nome do responsável."""
+    try:
+        return Responsaveis.objects.get(pk=int(valor))
+    except (ValueError, TypeError):
+        return Responsaveis.objects.get(nome=str(valor).strip())
+
+
+def _buscar_ambiente(valor):
+    """Aceita ID numérico ou a descrição do ambiente."""
+    try:
+        return Ambientes.objects.get(pk=int(valor))
+    except (ValueError, TypeError):
+        return Ambientes.objects.get(descricao=str(valor).strip())
+
+
+def _buscar_microcontrolador(valor):
+    """Aceita ID numérico ou o mac_address."""
+    try:
+        return Microcontroladores.objects.get(pk=int(valor))
+    except (ValueError, TypeError):
+        return Microcontroladores.objects.get(mac_address=str(valor).strip())
 
 
 @api_view(['POST'])
@@ -186,16 +211,17 @@ def importar_ambientes(request):
         criados, ignorados = 0, 0
 
         for i, row in df.iterrows():
+            # Aceita ID numérico OU nome do local
             try:
-                local_obj = Locais.objects.get(local=row['local'])
-            except Locais.DoesNotExist:
+                local_obj = _buscar_local(row['local'])
+            except (Locais.DoesNotExist, Exception):
                 erros.append(f"Linha {i+2}: Local '{row['local']}' não encontrado.")
                 continue
 
+            # Aceita ID numérico OU nome do responsável
             try:
-                # CORREÇÃO: campo do model é 'nome', planilha usa 'responsavel'
-                responsavel_obj = Responsaveis.objects.get(nome=row['responsavel'])
-            except Responsaveis.DoesNotExist:
+                responsavel_obj = _buscar_responsavel(row['responsavel'])
+            except (Responsaveis.DoesNotExist, Exception):
                 erros.append(f"Linha {i+2}: Responsável '{row['responsavel']}' não encontrado.")
                 continue
 
@@ -233,9 +259,10 @@ def importar_microcontroladores(request):
         criados, ignorados = 0, 0
 
         for i, row in df.iterrows():
+            # Aceita ID numérico OU descrição do ambiente
             try:
-                ambiente_obj = Ambientes.objects.get(descricao=row['ambiente'])
-            except Ambientes.DoesNotExist:
+                ambiente_obj = _buscar_ambiente(row['ambiente'])
+            except (Ambientes.DoesNotExist, Exception):
                 erros.append(f"Linha {i+2}: Ambiente '{row['ambiente']}' não encontrado.")
                 continue
 
@@ -275,23 +302,47 @@ def importar_sensores(request):
             if coluna not in df.columns:
                 return Response({"detail": f"Coluna obrigatória ausente: {coluna}"}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Mapa de normalização: qualquer variação vira o valor correto do choices
+        SENSOR_MAP = {
+            'temperatura':  'TEMPERATURA',
+            'umidade':      'UMIDADE',
+            'luminosidade': 'LUMINOSIDADE',
+            'contador':     'CONTADOR',
+        }
+        # Cobre variações de caractere (º vs °), maiúsculas, espaços
+        UNIDADE_MAP = {
+            'ºc':  '°C',  # ordinal masculino U+00BA
+            '°c':  '°C',  # grau correto U+00B0
+            'c':   '°C',
+            '%':   '%',
+            'lux': 'LUX',
+            'uni': 'UNI',
+            'uni.':'UNI',
+            'num': 'UNI',
+        }
+
         erros = []
         criados, ignorados = 0, 0
 
         for i, row in df.iterrows():
+            # Normaliza sensor e unidade para bater com os choices do model
+            sensor_raw  = str(row['sensor']).strip()
+            unidade_raw = str(row['unidade_med']).strip()
+            sensor_val  = SENSOR_MAP.get(sensor_raw.lower(), sensor_raw.upper())
+            unidade_val = UNIDADE_MAP.get(unidade_raw.lower(), unidade_raw)
+
+            # Aceita ID numérico OU mac_address do microcontrolador
             try:
-                mic_obj = Microcontroladores.objects.get(mac_address=row['mic'])
-            except Microcontroladores.DoesNotExist:
+                mic_obj = _buscar_microcontrolador(row['mic'])
+            except (Microcontroladores.DoesNotExist, Exception):
                 erros.append(f"Linha {i+2}: Microcontrolador '{row['mic']}' não encontrado.")
                 continue
 
-            # CORREÇÃO: get_or_create por (sensor, mic) para evitar duplicatas
-            # mas permitir sensores do mesmo tipo em microcontroladores diferentes
             _, created = Sensores.objects.get_or_create(
-                sensor=row['sensor'],
+                sensor=sensor_val,
                 mic=mic_obj,
                 defaults={
-                    'unidade_med': row['unidade_med'],
+                    'unidade_med': unidade_val,
                     'status': bool(row['status']),
                 }
             )
