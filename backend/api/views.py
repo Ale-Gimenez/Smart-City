@@ -1,4 +1,3 @@
-# views.py
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
@@ -92,8 +91,6 @@ class UsuariosViewSet(ModelViewSet):
         return qs.filter(user=self.request.user)
 
 
-# --- Autenticação ---
-
 class RegisterView(APIView):
     permission_classes = [AllowAny]
 
@@ -115,8 +112,6 @@ class UsuarioMeView(RetrieveAPIView):
     def get_object(self):
         return self.request.user.perfil
 
-
-# ─── Importações de Planilhas ───────────────────────────────────────────────
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -163,7 +158,6 @@ def importar_responsaveis(request):
 
 
 def _buscar_local(valor):
-    """Aceita ID numérico ou o texto do campo 'local'."""
     try:
         return Locais.objects.get(pk=int(valor))
     except (ValueError, TypeError):
@@ -171,7 +165,6 @@ def _buscar_local(valor):
 
 
 def _buscar_responsavel(valor):
-    """Aceita ID numérico ou o nome do responsável."""
     try:
         return Responsaveis.objects.get(pk=int(valor))
     except (ValueError, TypeError):
@@ -179,7 +172,6 @@ def _buscar_responsavel(valor):
 
 
 def _buscar_ambiente(valor):
-    """Aceita ID numérico ou a descrição do ambiente."""
     try:
         return Ambientes.objects.get(pk=int(valor))
     except (ValueError, TypeError):
@@ -187,7 +179,6 @@ def _buscar_ambiente(valor):
 
 
 def _buscar_microcontrolador(valor):
-    """Aceita ID numérico ou o mac_address."""
     try:
         return Microcontroladores.objects.get(pk=int(valor))
     except (ValueError, TypeError):
@@ -211,14 +202,12 @@ def importar_ambientes(request):
         criados, ignorados = 0, 0
 
         for i, row in df.iterrows():
-            # Aceita ID numérico OU nome do local
             try:
                 local_obj = _buscar_local(row['local'])
             except (Locais.DoesNotExist, Exception):
                 erros.append(f"Linha {i+2}: Local '{row['local']}' não encontrado.")
                 continue
 
-            # Aceita ID numérico OU nome do responsável
             try:
                 responsavel_obj = _buscar_responsavel(row['responsavel'])
             except (Responsaveis.DoesNotExist, Exception):
@@ -259,7 +248,6 @@ def importar_microcontroladores(request):
         criados, ignorados = 0, 0
 
         for i, row in df.iterrows():
-            # Aceita ID numérico OU descrição do ambiente
             try:
                 ambiente_obj = _buscar_ambiente(row['ambiente'])
             except (Ambientes.DoesNotExist, Exception):
@@ -302,17 +290,16 @@ def importar_sensores(request):
             if coluna not in df.columns:
                 return Response({"detail": f"Coluna obrigatória ausente: {coluna}"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Mapa de normalização: qualquer variação vira o valor correto do choices
         SENSOR_MAP = {
             'temperatura':  'TEMPERATURA',
             'umidade':      'UMIDADE',
             'luminosidade': 'LUMINOSIDADE',
             'contador':     'CONTADOR',
         }
-        # Cobre variações de caractere (º vs °), maiúsculas, espaços
+        
         UNIDADE_MAP = {
-            'ºc':  '°C',  # ordinal masculino U+00BA
-            '°c':  '°C',  # grau correto U+00B0
+            'ºc':  '°C', 
+            '°c':  '°C', 
             'c':   '°C',
             '%':   '%',
             'lux': 'LUX',
@@ -325,13 +312,11 @@ def importar_sensores(request):
         criados, ignorados = 0, 0
 
         for i, row in df.iterrows():
-            # Normaliza sensor e unidade para bater com os choices do model
             sensor_raw  = str(row['sensor']).strip()
             unidade_raw = str(row['unidade_med']).strip()
             sensor_val  = SENSOR_MAP.get(sensor_raw.lower(), sensor_raw.upper())
             unidade_val = UNIDADE_MAP.get(unidade_raw.lower(), unidade_raw)
 
-            # Aceita ID numérico OU mac_address do microcontrolador
             try:
                 mic_obj = _buscar_microcontrolador(row['mic'])
             except (Microcontroladores.DoesNotExist, Exception):
@@ -376,7 +361,6 @@ def importar_historicos(request):
         criados = 0
 
         for i, row in df.iterrows():
-            # CORREÇÃO: a planilha contém o ID numérico do sensor
             try:
                 sensor_id = int(row['sensor'])
                 sensor_obj = Sensores.objects.get(id=sensor_id)

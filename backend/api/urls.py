@@ -1,4 +1,3 @@
-# urls.py
 from django.urls import path, include
 from .views import *
 from rest_framework.routers import DefaultRouter
@@ -17,18 +16,14 @@ router.register(r'historicos', HistoricosViewSet)
 router.register(r'usuarios', UsuariosViewSet)
 
 urlpatterns = [
-    # TOKEN
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
-    # AUTENTICAÇÃO
     path('register/', RegisterView.as_view(), name='register'),
     path('me/', UsuarioMeView.as_view(), name='me'),
 
-    # MODELVIEWSET
     path('', include(router.urls)),
 
-    # EXCELL
     path('importar/locais/', importar_locais),
     path('importar/responsaveis/', importar_responsaveis),
     path('importar/ambientes/', importar_ambientes),

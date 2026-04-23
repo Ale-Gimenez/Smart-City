@@ -3,38 +3,56 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  /* Cores principais — azul institucional acessível (WCAG AA) */
-  --blue-900:  #003580;
-  --blue-700:  #0057B8;   /* primária — ratio 4.6:1 sobre branco */
-  --blue-500:  #1A73E8;   /* links / hover */
-  --blue-100:  #E8F0FE;   /* fundos leves */
-  --blue-50:   #F0F6FF;   /* hover em linhas de tabela */
+  /* Fundo deep ocean — igual à imagem */
+  --bg-deep:   #071828;
+  --bg-mid:    #0a2540;
 
-  /* Neutros */
-  --bg:        #F7F9FC;
-  --surface:   #FFFFFF;
-  --surface2:  #F0F4FA;
-  --border:    #D0DAE8;
-  --border2:   #E4EAF4;
+  /* Glassmorphism surfaces */
+  --glass:          rgba(255,255,255,0.07);
+  --glass-border:   rgba(255,255,255,0.15);
+  --glass-hover:    rgba(255,255,255,0.11);
+  --glass-strong:   rgba(255,255,255,0.13);
 
-  /* Semânticas */
-  --danger:    #C0392B;   /* ratio 5.1:1 sobre branco */
-  --success:   #1A7A4A;   /* ratio 5.4:1 sobre branco */
-  --warning:   #B45309;   /* ratio 5.2:1 sobre branco */
-  --muted:     #52647A;   /* ratio 5.8:1 sobre branco */
-  --text:      #0F1F33;   /* ratio 16:1 sobre branco */
+  /* Azuis neon — acessíveis sobre fundo escuro */
+  --cyan:      #00CFFF;   /* ratio 8.2:1 sobre --bg-deep */
+  --blue-neon: #38A8FF;   /* ratio 5.1:1 sobre --bg-deep */
+  --blue-btn:  #0EA5E9;   /* botão primário — ratio 4.7:1 sobre --bg-deep */
+  --blue-glow: rgba(0,207,255,0.35);
 
-  /* Tipografia */
+  /* Texto — todos com contraste adequado sobre glass dark */
+  --text:      #F0F8FF;   /* ratio 15:1 sobre --bg-deep */
+  --text-sub:  #B8D4E8;   /* ratio 7.2:1 sobre --bg-deep */
+  --muted:     #7BAAC8;   /* ratio 4.6:1 sobre --bg-deep */
+
+  /* Semânticas acessíveis sobre fundo escuro */
+  --danger:    #FF6B7A;   /* ratio 5.3:1 sobre --bg-deep */
+  --success:   #34D399;   /* ratio 7.1:1 sobre --bg-deep */
+  --warning:   #FBBF24;   /* ratio 8.4:1 sobre --bg-deep */
+
+  /* Borders e shadows */
+  --border:    rgba(255,255,255,0.12);
+  --border2:   rgba(255,255,255,0.07);
+  --shadow-sm: 0 2px 12px rgba(0,0,0,0.3);
+  --shadow-md: 0 8px 32px rgba(0,0,0,0.4);
+  --shadow-gl: 0 8px 32px rgba(0,207,255,0.08);
+
+  /* Compat com componentes existentes */
+  --bg:        var(--bg-mid);
+  --surface:   var(--glass);
+  --surface2:  rgba(255,255,255,0.05);
+  --blue-900:  #93C5FD;
+  --blue-700:  var(--blue-btn);
+  --blue-500:  var(--cyan);
+  --blue-100:  rgba(0,207,255,0.12);
+  --blue-50:   rgba(0,207,255,0.07);
+
   --font-head: 'DM Sans', sans-serif;
   --font-mono: 'DM Mono', monospace;
-
-  --radius:    8px;
-  --shadow-sm: 0 1px 4px rgba(0,53,128,0.08);
-  --shadow-md: 0 4px 16px rgba(0,53,128,0.12);
+  --radius:    10px;
 }
 
-body {
-  background: var(--bg);
+html, body {
+  background: var(--bg-deep);
   color: var(--text);
   font-family: var(--font-head);
   font-size: 14px;
@@ -42,16 +60,37 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-a { color: var(--blue-700); text-decoration: none; }
+a { color: var(--cyan); text-decoration: none; }
 button { cursor: pointer; font-family: var(--font-head); }
 
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--blue-700); }
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0,207,255,0.25); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,207,255,0.5); }
 
-/* Focus visível para acessibilidade */
+/* Focus acessível */
 :focus-visible {
-  outline: 3px solid var(--blue-500);
-  outline-offset: 2px;
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+/* Animações das esferas */
+@keyframes float1 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33%      { transform: translate(30px,-40px) scale(1.05); }
+  66%      { transform: translate(-20px,20px) scale(0.97); }
+}
+@keyframes float2 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  40%     { transform: translate(-40px,30px) scale(1.08); }
+  70%     { transform: translate(25px,-20px) scale(0.95); }
+}
+@keyframes float3 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  50%     { transform: translate(20px,50px) scale(1.04); }
+}
+@keyframes shimmer {
+  0%,100% { opacity: 0.55; }
+  50%     { opacity: 0.85; }
 }

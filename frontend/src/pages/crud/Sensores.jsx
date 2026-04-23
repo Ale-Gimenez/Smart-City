@@ -106,8 +106,15 @@ export default function Sensores() {
 }
 
 const pg = {
-  wrap:  { padding: '2rem' },
+  wrap:  { padding: '2rem', minHeight: '100vh' },
   head:  { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' },
-  title: { fontFamily: 'var(--font-head)', fontSize: 22, fontWeight: 800 },
-  card:  { background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)' },
+  title: { fontFamily: 'var(--font-head)', fontSize: 22, fontWeight: 700, color: 'var(--text)' },
+  card:  {
+    background: 'rgba(255,255,255,0.05)',
+    backdropFilter: 'blur(12px)',
+    WebkitBackdropFilter: 'blur(12px)',
+    border: '1px solid rgba(255,255,255,0.09)',
+    borderRadius: 14,
+    boxShadow: '0 4px 24px rgba(0,0,0,0.3)',
+  },
 };

@@ -28,11 +28,12 @@ export default function Layout({ children }) {
   return (
     <div style={s.shell}>
       <aside style={s.sidebar}>
+        {/* Linha neon no topo */}
+        <div style={s.neonTop} />
+
         {/* Logo */}
         <div style={s.logoWrap}>
-          <div style={s.logoMark}>
-            <span style={s.logoIcon}>⚡</span>
-          </div>
+          <div style={s.logoMark}>⚡</div>
           <div>
             <div style={s.logoName}>SmartSENAI</div>
             <div style={s.logoSub}>Monitoramento</div>
@@ -49,10 +50,7 @@ export default function Layout({ children }) {
                 <Link
                   key={item.path}
                   to={item.path}
-                  style={{
-                    ...s.navItem,
-                    ...(pathname === item.path ? s.navActive : {}),
-                  }}
+                  style={{ ...s.navItem, ...(pathname === item.path ? s.navActive : {}) }}
                 >
                   {item.label}
                 </Link>
@@ -62,9 +60,7 @@ export default function Layout({ children }) {
 
         <div style={{ flex: 1 }} />
         <div style={{ padding: '0 0.75rem 1rem' }}>
-          <button onClick={logout} style={s.logoutBtn}>
-            ⏻ Sair
-          </button>
+          <button onClick={logout} style={s.logoutBtn}>⏻ Sair</button>
         </div>
       </aside>
 
@@ -74,50 +70,53 @@ export default function Layout({ children }) {
 }
 
 const s = {
-  shell:      { display: 'flex', minHeight: '100vh' },
-  sidebar:    {
-    width: 228, background: 'var(--surface)',
-    borderRight: '1px solid var(--border)',
+  shell: { display: 'flex', minHeight: '100vh', background: 'var(--bg-deep)' },
+  sidebar: {
+    width: 228,
+    background: 'rgba(255,255,255,0.05)',
+    backdropFilter: 'blur(16px)',
+    WebkitBackdropFilter: 'blur(16px)',
+    borderRight: '1px solid rgba(255,255,255,0.09)',
     display: 'flex', flexDirection: 'column',
-    position: 'sticky', top: 0, height: '100vh',
-    overflowY: 'auto',
-    boxShadow: '2px 0 8px rgba(0,53,128,0.06)',
+    position: 'sticky', top: 0, height: '100vh', overflowY: 'auto',
+    boxShadow: '2px 0 24px rgba(0,0,0,0.3)',
   },
-  logoWrap:   {
-    display: 'flex', alignItems: 'center', gap: 10,
-    padding: '1.25rem 1rem 1rem',
+  neonTop: {
+    height: 3,
+    background: 'linear-gradient(90deg, #00CFFF, #0057B8, #00CFFF)',
+    backgroundSize: '200% 100%',
   },
-  logoMark:   {
-    width: 36, height: 36, borderRadius: 8,
-    background: 'var(--blue-700)',
+  logoWrap: { display: 'flex', alignItems: 'center', gap: 10, padding: '1.2rem 1rem 1rem' },
+  logoMark: {
+    width: 34, height: 34, borderRadius: 8, flexShrink: 0,
+    background: 'linear-gradient(135deg, #00CFFF, #0057B8)',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
-    flexShrink: 0,
+    fontSize: 17, boxShadow: '0 0 12px rgba(0,207,255,0.4)',
   },
-  logoIcon:   { fontSize: 18 },
-  logoName:   {
-    fontFamily: 'var(--font-head)', fontWeight: 700,
-    fontSize: 15, color: 'var(--text)', lineHeight: 1.2,
+  logoName: { fontFamily: 'var(--font-head)', fontWeight: 700, fontSize: 14, color: 'var(--text)', lineHeight: 1.2 },
+  logoSub:  { fontSize: 10, color: 'var(--muted)', marginTop: 1 },
+  divider:  { height: 1, background: 'rgba(255,255,255,0.08)', margin: '0 0.75rem 0.5rem' },
+  nav:      { display: 'flex', flexDirection: 'column', padding: '0 0.5rem' },
+  navItem: {
+    padding: '0.48rem 0.75rem', color: 'var(--muted)', fontSize: 13,
+    borderRadius: 7, display: 'block', transition: 'all .12s',
+    borderLeft: '2px solid transparent', marginBottom: 1, fontWeight: 500,
   },
-  logoSub:    { fontSize: 11, color: 'var(--muted)', marginTop: 1 },
-  divider:    { height: 1, background: 'var(--border2)', margin: '0 0.75rem 0.5rem' },
-  nav:        { display: 'flex', flexDirection: 'column', padding: '0 0.5rem' },
-  navItem:    {
-    padding: '0.5rem 0.75rem', color: 'var(--muted)', fontSize: 13,
-    borderRadius: 6, display: 'block', transition: 'all .12s',
-    borderLeft: '3px solid transparent', marginBottom: 1,
-    fontWeight: 500,
+  navActive: {
+    color: 'var(--cyan)',
+    borderLeftColor: 'var(--cyan)',
+    background: 'rgba(0,207,255,0.09)',
+    fontWeight: 600,
+    textShadow: '0 0 8px rgba(0,207,255,0.3)',
   },
-  navActive:  {
-    color: 'var(--blue-700)', borderLeftColor: 'var(--blue-700)',
-    background: 'var(--blue-100)', fontWeight: 600,
-  },
-  menuDivider:{ height: 1, background: 'var(--border2)', margin: '0.4rem 0.25rem' },
-  main:       { flex: 1, minWidth: 0, background: 'var(--bg)' },
-  logoutBtn:  {
-    width: '100%', padding: '0.5rem',
-    background: 'transparent', border: '1px solid var(--border)',
-    color: 'var(--danger)', borderRadius: 'var(--radius)',
-    fontSize: 13, fontWeight: 600, transition: 'all .12s',
-    fontFamily: 'var(--font-head)',
+  menuDivider: { height: 1, background: 'rgba(255,255,255,0.06)', margin: '0.4rem 0.25rem' },
+  main: { flex: 1, minWidth: 0 },
+  logoutBtn: {
+    width: '100%', padding: '0.48rem',
+    background: 'rgba(255,107,122,0.1)',
+    border: '1px solid rgba(255,107,122,0.3)',
+    color: 'var(--danger)',
+    borderRadius: 'var(--radius)', fontSize: 13, fontWeight: 600,
+    transition: 'all .12s', fontFamily: 'var(--font-head)',
   },
 };

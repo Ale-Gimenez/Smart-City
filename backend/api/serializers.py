@@ -46,10 +46,9 @@ class UsuariosSerializer(serializers.ModelSerializer):
 
 
 class RegisterSerializer(serializers.Serializer):
-    # Tabela auth_user
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
-    # Tabela api_usuarios
+
     nome = serializers.CharField(required=False, allow_blank=True, default='')
     telefone = serializers.CharField(required=False, allow_blank=True, default='')
     tipo = serializers.ChoiceField(choices=Usuarios.TIPO_CHOICES)
@@ -64,7 +63,6 @@ class RegisterSerializer(serializers.Serializer):
             password=validated_data['password']
         )
 
-        # CORREÇÃO: salvar o user após alterar is_staff
         if tipo == "ADMINISTRADOR":
             user.is_staff = True
             user.is_active = True

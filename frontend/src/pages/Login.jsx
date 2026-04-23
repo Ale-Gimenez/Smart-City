@@ -2,6 +2,22 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 
+function Sphere({ size, x, y, color1, color2, anim, opacity = 0.9, blur = 0 }) {
+  return (
+    <div style={{
+      position: 'absolute', left: x, top: y,
+      width: size, height: size, borderRadius: '50%',
+      background: `radial-gradient(circle at 35% 32%, ${color1} 0%, ${color2} 65%, rgba(0,0,0,0.6) 100%)`,
+      boxShadow: `0 0 ${size * 0.4}px ${color2}55, inset 0 -${size*0.05}px ${size*0.15}px rgba(0,0,0,0.5)`,
+      animation: `${anim} ease-in-out infinite`,
+      opacity,
+      filter: blur ? `blur(${blur}px)` : 'none',
+      pointerEvents: 'none',
+      zIndex: 0,
+    }} />
+  );
+}
+
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -25,21 +41,25 @@ export default function Login() {
 
   return (
     <div style={s.bg}>
-      {/* Detalhe geométrico */}
-      <div style={s.blueBar} />
-      <div style={s.blueDot} />
+      <Sphere size={220} x="8%"  y="5%"  color1="#4DD9FF" color2="#0080CC" anim="float1 9s"  opacity={0.85} />
+      <Sphere size={140} x="72%" y="3%"  color1="#00FFEE" color2="#0099BB" anim="float2 11s" opacity={0.80} />
+      <Sphere size={180} x="78%" y="52%" color1="#30D5F5" color2="#007AB8" anim="float3 13s" opacity={0.88} />
+      <Sphere size={100} x="3%"  y="65%" color1="#60E8FF" color2="#0066AA" anim="float2 8s"  opacity={0.70} />
+      <Sphere size={260} x="55%" y="68%" color1="#00CFFF" color2="#004E8C" anim="float1 14s" opacity={0.65} blur={6} />
+      <Sphere size={80}  x="40%" y="2%"  color1="#A0F0FF" color2="#009DB8" anim="float3 7s"  opacity={0.60} />
 
       <div style={s.card}>
-        {/* Cabeçalho */}
+        <div style={s.glassSheen} />
+
         <div style={s.brand}>
-          <div style={s.logoMark}><span style={{ fontSize: 20 }}>⚡</span></div>
+          <div style={s.logoMark}>⚡</div>
           <div>
             <div style={s.brandName}>SmartSENAI</div>
             <div style={s.brandSub}>Sistema de Monitoramento Ambiental</div>
           </div>
         </div>
 
-        <div style={s.separator} />
+        <div style={s.sep} />
 
         <form onSubmit={handleLogin} style={s.form}>
           <div style={s.field}>
@@ -66,16 +86,18 @@ export default function Login() {
             />
           </div>
           {erro && (
-            <div style={s.erroBox} role="alert">
-              <span>⚠️</span> {erro}
-            </div>
+            <div style={s.erroBox} role="alert">⚠️ {erro}</div>
           )}
-          <button style={{ ...s.btn, opacity: loading ? 0.75 : 1 }} type="submit" disabled={loading}>
+          <button
+            style={{ ...s.btn, opacity: loading ? 0.75 : 1 }}
+            type="submit"
+            disabled={loading}
+          >
             {loading ? 'Entrando…' : 'Entrar'}
           </button>
         </form>
 
-        <p style={s.footer}>TecnoVille © {new Date().getFullYear()}</p>
+        <p style={s.footer}>SmartSENAI © {new Date().getFullYear()}</p>
       </div>
     </div>
   );
@@ -83,68 +105,84 @@ export default function Login() {
 
 const s = {
   bg: {
-    minHeight: '100vh', display: 'flex',
-    alignItems: 'center', justifyContent: 'center',
-    background: 'var(--bg)', position: 'relative', overflow: 'hidden',
-  },
-  blueBar: {
-    position: 'absolute', top: 0, left: 0, right: 0, height: 5,
-    background: 'linear-gradient(90deg, var(--blue-900), var(--blue-500))',
-  },
-  blueDot: {
-    position: 'absolute', top: -120, right: -120,
-    width: 360, height: 360, borderRadius: '50%',
-    background: 'var(--blue-100)', opacity: 0.7,
-    pointerEvents: 'none',
+    minHeight: '100vh',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    background: 'radial-gradient(ellipse at 60% 40%, #0d2d4a 0%, #071828 60%, #030e18 100%)',
+    position: 'relative', overflow: 'hidden',
   },
   card: {
-    position: 'relative', background: 'var(--surface)',
-    border: '1px solid var(--border)',
-    borderRadius: 14, padding: '2.25rem',
-    width: 380, boxShadow: 'var(--shadow-md)',
+    position: 'relative', zIndex: 10,
+    width: 380,
+    background: 'rgba(255,255,255,0.08)',
+    backdropFilter: 'blur(24px)',
+    WebkitBackdropFilter: 'blur(24px)',
+    border: '1px solid rgba(255,255,255,0.18)',
+    borderRadius: 20,
+    padding: '2.25rem',
+    boxShadow: '0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
   },
-  brand: { display: 'flex', alignItems: 'center', gap: 12, marginBottom: '1.25rem' },
+  glassSheen: {
+    position: 'absolute', top: 0, left: '10%', right: '10%', height: 1,
+    background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)',
+    borderRadius: '0 0 50% 50%',
+    pointerEvents: 'none',
+  },
+  brand: { display: 'flex', alignItems: 'center', gap: 12, marginBottom: '1.2rem' },
   logoMark: {
-    width: 44, height: 44, borderRadius: 10,
-    background: 'var(--blue-700)',
+    width: 42, height: 42, borderRadius: 11,
+    background: 'linear-gradient(135deg, #00CFFF, #0057B8)',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
-    flexShrink: 0,
+    fontSize: 20, flexShrink: 0,
+    boxShadow: '0 0 16px rgba(0,207,255,0.45)',
   },
   brandName: {
-    fontFamily: 'var(--font-head)', fontSize: 20,
-    fontWeight: 700, color: 'var(--text)',
+    fontFamily: 'var(--font-head)', fontWeight: 700, fontSize: 19,
+    color: '#F0F8FF',
+    textShadow: '0 0 20px rgba(0,207,255,0.3)',
   },
-  brandSub: { fontSize: 12, color: 'var(--muted)', marginTop: 2 },
-  separator: { height: 1, background: 'var(--border2)', marginBottom: '1.5rem' },
+  brandSub: { fontSize: 11, color: 'var(--text-sub)', marginTop: 2 },
+  sep: {
+    height: 1, marginBottom: '1.4rem',
+    background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)',
+  },
   form:  { display: 'flex', flexDirection: 'column', gap: '1rem' },
-  field: { display: 'flex', flexDirection: 'column', gap: 5 },
+  field: { display: 'flex', flexDirection: 'column', gap: 6 },
   label: {
-    fontSize: 11, textTransform: 'uppercase',
-    letterSpacing: '0.07em', color: 'var(--muted)', fontWeight: 600,
+    fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.07em',
+    color: 'var(--text-sub)', fontWeight: 600,
   },
   input: {
-    padding: '0.6rem 0.8rem',
-    background: 'var(--surface2)', border: '1px solid var(--border)',
-    borderRadius: 'var(--radius)', color: 'var(--text)',
+    padding: '0.65rem 0.9rem',
+    background: 'rgba(255,255,255,0.92)',  /* branco — texto escuro legível */
+    border: '1px solid rgba(0,207,255,0.35)',
+    borderRadius: 'var(--radius)',
+    color: '#0F1F33',                       /* contraste 16:1 sobre branco */
     fontFamily: 'var(--font-head)', fontSize: 14,
+    outline: 'none',
+    transition: 'border-color .15s, box-shadow .15s',
   },
   erroBox: {
-    display: 'flex', alignItems: 'center', gap: 6,
-    background: '#FFF0EE', border: '1px solid #F5C6C0',
-    borderRadius: 'var(--radius)', padding: '0.55rem 0.8rem',
-    color: 'var(--danger)', fontSize: 13, fontWeight: 500,
+    background: 'rgba(255,80,80,0.15)',
+    border: '1px solid rgba(255,107,122,0.45)',
+    borderRadius: 'var(--radius)',
+    padding: '0.55rem 0.85rem',
+    color: '#FF9EA7',   /* ratio 6.1:1 sobre fundo glass */
+    fontSize: 13, fontWeight: 500,
   },
   btn: {
-    padding: '0.7rem',
-    background: 'var(--blue-700)', color: '#fff',
+    padding: '0.72rem',
+    background: 'linear-gradient(135deg, #00CFFF, #0075CC)',
+    color: '#fff',
     border: 'none', borderRadius: 'var(--radius)',
-    fontWeight: 700, fontSize: 15, cursor: 'pointer',
-    fontFamily: 'var(--font-head)', marginTop: 4,
-    boxShadow: '0 2px 8px rgba(0,87,184,0.25)',
-    transition: 'background .15s',
+    fontWeight: 700, fontSize: 15,
+    cursor: 'pointer', fontFamily: 'var(--font-head)',
+    marginTop: 4,
+    boxShadow: '0 4px 20px rgba(0,207,255,0.4)',
+    transition: 'opacity .15s, box-shadow .15s',
+    letterSpacing: '0.02em',
   },
   footer: {
-    marginTop: '1.5rem', textAlign: 'center',
+    marginTop: '1.4rem', textAlign: 'center',
     fontSize: 11, color: 'var(--muted)',
   },
 };
