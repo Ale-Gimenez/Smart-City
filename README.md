@@ -282,17 +282,6 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 ### Autenticação
 
-| Método | Endpoint         | Descrição                     |
-|--------|------------------|-------------------------------|
-| POST   | `/api/token/`    | Obtém o par de tokens JWT     |
-| POST   | `/api/refresh/`  | Renova o access token         |
-| POST   | `/api/register/` | Cadastra novo usuário         |
-| GET    | `/api/me/`       | Dados do usuário autenticado  |
-
-## 🔌 Endpoints da API
-
-### Autenticação
-
 | Método | Endpoint          | Descrição                        |
 |--------|-------------------|----------------------------------|
 | POST   | `/api/token/`     | Obtém o par de tokens JWT        |
@@ -342,7 +331,7 @@ GET /api/microcontroladores/?status=true
 GET /api/historicos/recentes/
 ```
 
-Todos os endpoints de recursos aceitam `GET`, `POST`, `PUT`, `PATCH` e `DELETE` (exceto `recentes/` que é somente `GET`).
+Todos os endpoints de recursos aceitam `GET`, `POST`, `PUT` e `DELETE` (exceto `recentes/` que é somente `GET`).
 
 ### Filtros disponíveis
 
