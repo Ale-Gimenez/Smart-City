@@ -377,7 +377,7 @@ Content-Type: application/json
 Authorization: Bearer <access_token>
 ```
 
-**Renovar (expira em 30 min):**
+**Renovar (expira em 120 min):**
 
 ```bash
 POST /api/refresh/
@@ -501,6 +501,6 @@ tzdata==2026.1
 
 - Trabalho individual — PWBE, SENAI "Roberto Mange"
 - Banco de dados configurado para **MySQL** — não compatível com SQLite sem alterar `settings.py`
-- Token JWT expira em **30 minutos** — use `/api/refresh/` para renová-lo
+- Token JWT expira em **120 minutos** — use `/api/refresh/` para renová-lo
 - Em produção, altere o `SECRET_KEY` e configure `DEBUG = False` no `settings.py`
 - Todas as URLs da API terminam com `/` — requisições sem barra final retornam erro 500
